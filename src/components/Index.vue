@@ -33,6 +33,12 @@
                         <span class="nav-text">查看问卷</span>
                     </router-link>
                 </a-menu-item>
+                <a-menu-item key="4">
+                    <router-link :to="`vision`">
+                        <a-icon type="summary"/>
+                        <span class="nav-text">问卷统计</span>
+                    </router-link>
+                </a-menu-item>
             </a-menu>
         </a-layout-sider>
         <a-layout>

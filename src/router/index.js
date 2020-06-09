@@ -4,6 +4,7 @@ import Index from "../components/Index";
 import Login from "../components/Login";
 import Watch from "../components/Watch";
 import Register from "../components/Register";
+import Vision from "../components/Vision";
 
 Vue.use(VueRouter)
 
@@ -26,6 +27,10 @@ const routes = [
                 path: '/register',
                 name: 'Register',
                 component: Register
+            },{
+                path: '/vision',
+                name: 'Vision',
+                component: Vision
             }]
     }
 ]

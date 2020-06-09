@@ -6,7 +6,10 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import Ads from 'vue-google-adsense'
 import axios from 'axios'
+import VCharts from 'v-charts'
+import App from './App.vue'
 
+Vue.use(VCharts)
 Vue.use(require('./mock'));
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
@@ -21,5 +24,6 @@ Vue.use(Ads.InFeedAdsense);
 new Vue({
     router,
     store,
+    el: '#app',
     render: h => h(App)
 }).$mount('#app');
