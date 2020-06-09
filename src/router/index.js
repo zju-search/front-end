@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HelloWorld from "../components/Index";
 import Index from "../components/Index";
 import Login from "../components/Login";
+import Watch from "../components/Watch";
+import Register from "../components/Register";
 
 Vue.use(VueRouter)
 
@@ -17,9 +18,14 @@ const routes = [
             component: Login
         },
             {
-                path: '/hello',
-                name: 'HelloWorld',
-                component: HelloWorld
+                path: '/watch/:id/',
+                name: 'Watch',
+                component: Watch
+            },
+            {
+                path: '/register',
+                name: 'Register',
+                component: Register
             }]
     }
 ]

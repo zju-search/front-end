@@ -13,8 +13,10 @@
         </a-form-item>
     </a-form>
 </template>
-
 <script>
+    import VueCookies from 'vue-cookies';
+    import router from "../router";
+
     export default {
         name: "Login",
         data() {
@@ -37,11 +39,11 @@
                             if (state == true) {
                                 let name = data.name;
                                 let token = data.token;
-                                document.cookie
-                                this.$cookies.set("email", "123213", 1);
-                                this.$cookies.set("name", name, 1);
-                                this.$cookies.set("token", token, 1);
-                                this.$router.push({name: '/'});
+                                let email = data.email;
+                                VueCookies.set('name' , name, "1d");
+                                VueCookies.set("token", token, "1d");
+                                VueCookies.set("email", email, "1d");
+                                router.push("/");
                             }
                         });
                     }
