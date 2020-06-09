@@ -9,13 +9,14 @@ import axios from 'axios'
 
 Vue.use(require('./mock'));
 Vue.config.productionTip = false;
-Vue.prototype.$http= axios;
+Vue.prototype.$http = axios;
 Vue.use(require('vue-cookies'));
 Vue.use(require('vue-script2'));
 Vue.use(Antd);
 Vue.use(Ads.Adsense);
 Vue.use(Ads.InArticleAdsense);
 Vue.use(Ads.InFeedAdsense);
+
 
 new Vue({
     router,

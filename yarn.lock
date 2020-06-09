@@ -10826,10 +10826,22 @@ validate-npm-package-name@^3.0.0, validate-npm-package-name@~3.0.0:
   dependencies:
     builtins "^1.0.3"
 
+validator@^10.8.0:
+  version "10.11.0"
+  resolved "https://registry.npm.taobao.org/validator/download/validator-10.11.0.tgz?cache=0&sync_timestamp=1584674408797&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvalidator%2Fdownload%2Fvalidator-10.11.0.tgz#003108ea6e9a9874d31ccc9e5006856ccd76b228"
+  integrity sha1-ADEI6m6amHTTHMyeUAaFbM12sig=
+
 vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/vary/download/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+vcc-validate@^1.0.9-beta.2:
+  version "1.0.9-beta.2"
+  resolved "https://registry.npm.taobao.org/vcc-validate/download/vcc-validate-1.0.9-beta.2.tgz#2bedbbc4834125f465de0628e4356567cfba9b73"
+  integrity sha1-K+27xINBJfRl3gYo5DVlZ8+6m3M=
+  dependencies:
+    validator "^10.8.0"
 
 vendors@^1.0.0:
   version "1.0.4"
