@@ -16,10 +16,12 @@
             <div class="ant-statistic-title">填写地域分布</div>
             <div style="min-height: 500px; justify-content: center;position: relative" id="map"/>
         </div>
-        <div v-for="(question,index) in questions" :key="index">
-            <div class="ant-statistic-title">{{index+1}}:{{question}}</div>
-            <div v-if></div>
-        </div>
+        <router-link :to="`vision-detail`">
+            <a-button type="primary" style="margin-top: 15px">
+                查看问题统计
+                <a-icon type="right"/>
+            </a-button>
+        </router-link>
     </div>
 </template>
 
@@ -89,7 +91,6 @@
                 type: "1",
             };
         },
-
         mounted() {
             let formData = new FormData();
             let id = this.$route.query.id;

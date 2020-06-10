@@ -34,7 +34,7 @@
                     </router-link>
                 </a-menu-item>
                 <a-menu-item key="5">
-                    <router-link :to="`vision`">
+                    <router-link :to="`vision-outline`">
                         <a-icon type="area-chart" />
                         <span class="nav-text">问卷统计</span>
                     </router-link>
