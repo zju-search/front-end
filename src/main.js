@@ -7,7 +7,6 @@ import 'ant-design-vue/dist/antd.css';
 import Ads from 'vue-google-adsense'
 import axios from 'axios'
 import VCharts from 'v-charts'
-import App from './App.vue'
 
 Vue.use(VCharts)
 Vue.use(require('./mock'));

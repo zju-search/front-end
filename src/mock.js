@@ -2,35 +2,40 @@ const Mock = require('mockjs');
 const Random = Mock.Random;
 
 const VisionData = function () {
+    // 随机不同的问题
     let questions = [];
+    for (let i = 0; i < 10; i++) {
+        let question = Random.title();
+        questions.push(question);
+    }
+    //随机不同的答案
     let answers = [];
     let questionTypes = [];
-    for(let i=0;i<10;i++)
-    {
-        let question = {
-            title: Random.title(),
-            type: Random.natural(5, 5),
-            choices: choices
-        };
-        questions.push(question);
-        let answer = {
-            title: Random.title(),
-            type: Random.natural(5, 5),
-            choices: choices
-        };
-        answers.push(answer);
-        let questionType = {
-            type: Random.natural(5, 5),
-        }
+    for (let i = 0; i < 10; i++) {
+        let answer = [];
+        let questionType = Random.natural(0, 3);
         questionTypes.push(questionType);
+        for(let j = 0;j < 10;j ++){
+            if (questionType == 0) {
+                let choice = Random.natural(0, 3);
+                answer.push(choice);
+            } else if (questionType == 1) {
+                let choice = Random.natural(0, 100);
+                answer.push(choice);
+            } else if (questionType == 2) {
+                let choice = Random.cparagraph();
+                answer.push(choice);
+            }
+        }
+        answers.push(answer);
     }
     let Data = {
         title: Random.title(),
-        createTime: Random.createTime(),
-        deadTime: Random.deadTime(),
-        number: Random.number(),
-        fillNumber: Random.fillNumber(),
-        type: Random.natural(5, 5),
+        createTime: Random.date(),
+        deadTime: Random.date(),
+        number: Random.natural(0,100),
+        fillNumber: Random.natural(0, 100),
+        type: Random.natural(0, 3),
         questions: questions,
         answers: answers,
         questionTypes: questionTypes
@@ -58,7 +63,7 @@ const QuestionData = function () {
         }
         let question = {
             title: Random.title(),
-            type: Random.natural(5,5),
+            type: Random.natural(5, 5),
             choices: choices
         };
         questions.push(question);
@@ -82,4 +87,4 @@ const RegisterData = function () {
 Mock.mock('/api/login', 'post', LoginData);
 Mock.mock('/api/register', 'post', RegisterData);
 Mock.mock('/api/getQuestion', 'post', QuestionData);
-Mock.mock('/api/vision', 'post', VisionData);
+Mock.mock('/api/statisticQuestionInfo', 'post', VisionData);

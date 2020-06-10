@@ -4,7 +4,7 @@
             <div><img class="logo" src="../assets/logo.jpeg"/><b><span
                     style="color: whitesmoke;font-size: 15px ">溯源问卷网</span></b>
             </div>
-            <a-menu theme="dark" mode="inline" :default-selected-keys="['4']">
+            <a-menu theme="dark" mode="inline">
                 <a-menu-item key="1" v-if="this.token == null">
                     <router-link :to="`login`">
                         <a-icon type="user"/>
@@ -33,16 +33,16 @@
                         <span class="nav-text">查看问卷</span>
                     </router-link>
                 </a-menu-item>
-                <a-menu-item key="4">
+                <a-menu-item key="5">
                     <router-link :to="`vision`">
-                        <a-icon type="summary"/>
+                        <a-icon type="area-chart" />
                         <span class="nav-text">问卷统计</span>
                     </router-link>
                 </a-menu-item>
             </a-menu>
         </a-layout-sider>
         <a-layout>
-            <a-layout-header ></a-layout-header>
+            <a-layout-header></a-layout-header>
             <a-layout-content :style="{ margin: '12px 24px 0' }">
                 <div :style="{padding: '24px', background: '#fff', minHeight: '360px' }">
                     <RouterView :style="{textAlign:'left'}"></RouterView>
