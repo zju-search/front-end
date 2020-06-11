@@ -1,17 +1,20 @@
 <template>
     <div>
-        <div v-for="(question,index) in questions" :key="index">
-            <div class="ant-statistic-title">问题{{index+1}}:{{question}}</div>
-        </div>
-        <div id="chart"></div>
+        <div class="ant-statistic-title">选项统计情况</div>
+        <div id="radio"></div>
+        <div class="ant-statistic-title">文本字数统计情况</div>
+        <div id="text"></div>
+        <div class="ant-statistic-title">数字类型统计情况</div>
+        <div id="number"></div>
     </div>
 </template>
 
 <script>
     import {Chart} from '@antv/g2';
-
+    import { DataView } from '@antv/data-set';
 
     export default {
+        name:"VisionDetail",
         data() {
             return {
                 createTime: 1000,
@@ -26,34 +29,16 @@
             };
         },
         methods: {
-            dataChart: function () {
-                const data = [
-                    { name: 'London', 月份: 'Jan.', 月均降雨量: 18.9 },
-                    { name: 'London', 月份: 'Feb.', 月均降雨量: 28.8 },
-                    { name: 'London', 月份: 'Mar.', 月均降雨量: 39.3 },
-                    { name: 'London', 月份: 'Apr.', 月均降雨量: 81.4 },
-                    { name: 'London', 月份: 'May', 月均降雨量: 47 },
-                    { name: 'London', 月份: 'Jun.', 月均降雨量: 20.3 },
-                    { name: 'London', 月份: 'Jul.', 月均降雨量: 24 },
-                    { name: 'London', 月份: 'Aug.', 月均降雨量: 35.6 },
-                    { name: 'Berlin', 月份: 'Jan.', 月均降雨量: 12.4 },
-                    { name: 'Berlin', 月份: 'Feb.', 月均降雨量: 23.2 },
-                    { name: 'Berlin', 月份: 'Mar.', 月均降雨量: 34.5 },
-                    { name: 'Berlin', 月份: 'Apr.', 月均降雨量: 99.7 },
-                    { name: 'Berlin', 月份: 'May', 月均降雨量: 52.6 },
-                    { name: 'Berlin', 月份: 'Jun.', 月均降雨量: 35.5 },
-                    { name: 'Berlin', 月份: 'Jul.', 月均降雨量: 37.4 },
-                    { name: 'Berlin', 月份: 'Aug.', 月均降雨量: 42.4 },
-                ];
-
+            radioChart: function (d) {
+                console.log(d);
+                const data = d;
                 const chart = new Chart({
-                    container: "chart",
+                    container: "radio",
                     autoFit: true,
                     height: 500,
                 });
-
                 chart.data(data);
-                chart.scale('月均降雨量', {
+                chart.scale('value', {
                     nice: true,
                 });
                 chart.tooltip({
@@ -61,44 +46,110 @@
                     shared: true,
                 });
 
-                // chart.interval().position('月份*月均降雨量').color('name').adjust([{type: 'dodge', marginRatio: 0,},]);
-                chart.interval().position('月份*月均降雨量').color('name').adjust([{type: 'dodge', marginRatio: 0,},]);
+                chart.interval().position('index*value').color('name').adjust([{type: 'dodge', marginRatio: 0,},]);
+                chart.interaction('active-region');
+                chart.render();
+            },
+            textChart: function (d) {
+                const data = d
+                const chart = new Chart({
+                    container: 'text',
+                    autoFit: true,
+                    height: 500,
+                    padding: 50,
+                });
+
+                chart.data(data);
+                chart.scale('value', {
+                    nice: true,
+                });
+                chart.coordinate('polar', {
+                    innerRadius: 0.4,
+                });
+                chart.axis(false);
+                chart.legend(false);
+                chart.tooltip({
+                    showContent: false, showCrosshairs: true, crosshairs: {
+                        line: {
+                            style: {lineDash: [2],}
+                        },
+                        text: {
+                            position: 'end', offset: 5, autoRotate: true,
+                            style: {fontSize: 14,}
+                        },
+                        textBackground: null
+                    },
+                });
+                chart.interval().position('name*value').color('name').size(100);
+                chart.render();
+            },
+            statisticChart: function (d) {
+                console.log(d);
+                const data = d;
+                const dv = new DataView().source(data);
+                dv.transform({
+                    type: 'map',
+                    callback: obj => {
+                        obj.range = [obj.low, obj.q1, obj.median, obj.q3, obj.high];
+                        return obj;
+                    }
+                });
+                const chart = new Chart({
+                    container: 'number',
+                    autoFit: true,
+                    height: 500
+                });
+                chart.data(dv.rows);
+                chart.scale('range', {
+                    nice: true,
+                });
+                chart.tooltip({
+                    showTitle: false,
+                    showMarkers: false,
+                    itemTpl: '<li class="g2-tooltip-list-item" data-index={index} style="margin-bottom:4px;">'
+                        + '<span style="background-color:{color};" class="g2-tooltip-marker"></span>'
+                        + '{name}<br/>'
+                        + '<span style="padding-left: 16px">最大值：{high}</span><br/>'
+                        + '<span style="padding-left: 16px">上四分位数：{q3}</span><br/>'
+                        + '<span style="padding-left: 16px">中位数：{median}</span><br/>'
+                        + '<span style="padding-left: 16px">下四分位数：{q1}</span><br/>'
+                        + '<span style="padding-left: 16px">最小值：{low}</span><br/>'
+                        + '</li>'
+                });
+                chart
+                    .schema()
+                    .position('x*range')
+                    .shape('box')
+                    .tooltip('x*low*q1*median*q3*high', (x, low, q1, median, q3, high) => {
+                        return {
+                            name: x,
+                            low,
+                            q1,
+                            median,
+                            q3,
+                            high
+                        };
+                    })
+                    .style({
+                        stroke: '#545454',
+                        fill: '#1890FF',
+                        fillOpacity: 0.3
+                    });
+
                 chart.interaction('active-region');
                 chart.render();
             }
         },
         mounted() {
-            this.dataChart();
             let formData = new FormData();
             let id = this.$route.query.id;
             formData.append('id', id);
             var _this = this;
-            this.$http.post('/api/statisticQuestionInfo', formData).then(function (response) {
+            this.$http.post('/api/statisticQuestion', formData).then(function (response) {
                 let data = response.data;
-                _this.deadTime = data.deadTime;
-                _this.createTime = data.createTime;
-                _this.fillNumber = data.fillNumber;
-                if (data.number > 0) {
-                    _this.number = data.number;
-                } else {
-                    _this.number = "无限制"
-                }
-                _this.questionTypes = data.questionTypes;
-                _this.questions = data.questions;
-                _this.answers = data.answers;
-                _this.title = data.title;
-                if (data.type === 0) {
-                    _this.type = "只限注册用户";
-                } else if (data.type === 1) {
-                    _this.type = "累积达到一定数量截止";
-                } else if (data.type == 2) {
-                    _this.type = "每日只允许填写一定数量"
-                } else {
-                    _this.type = "无限制问卷类型";
-                }
-                // for(var index in _this.answers){
-                //     this.dataChart(index);
-                // }
+                _this.radioChart(data.radios);
+                _this.textChart(data.text);
+                _this.statisticChart(data.statistic);
             });
         },
     };

@@ -2,10 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from "../components/Index";
 import Login from "../components/Login";
-import Watch from "../components/Watch";
+import Write from "../components/Write";
+import WriteList from "../components/RectifyList";
+import VisionList from "../components/VisionList";
 import Register from "../components/Register";
 import VisionOutline from "../components/VisionOutline";
 import VisionDetail from "../components/VisionDetail";
+import QuestionType from "../components/QuestionType";
 Vue.use(VueRouter);
 
 const routes = [
@@ -13,29 +16,48 @@ const routes = [
         path: '/',
         name: 'Index',
         component: Index,
-        children: [{
-            path: '/login',
-            name: 'Login',
-            component: Login
-        },
+        children: [
             {
-                path: '/watch/:id/',
-                name: 'Watch',
-                component: Watch
+                path: '/login',
+                name: 'Login',
+                component: Login
+            },
+            {
+                path: '/write/:id/',
+                name: 'write',
+                component: Write
             },
             {
                 path: '/register',
                 name: 'Register',
                 component: Register
-            },{
+            },
+            {
                 path: '/vision-outline/:id/',
                 name: 'VisionOutline',
                 component: VisionOutline
-            },{
-                path:'/vision-detail/:id/',
+            },
+            {
+                path: '/vision-detail/:id/',
                 name: 'VisionDeatil',
                 component: VisionDetail
-            }]
+            },
+            {
+                path: '/RectifyList',
+                name: 'RectifyList',
+                component: WriteList
+            },
+            {
+                path: '/VisionList',
+                name: 'VisionList',
+                component: VisionList
+            },
+            {
+                path: '/QuestionType/:id/',
+                name: 'QuestionType',
+                component: QuestionType
+            }
+        ]
     }
 ]
 

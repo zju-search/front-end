@@ -16,17 +16,9 @@
                 <!--                TYPE = 2代表文本-->
                 <a-textarea placeholder="请输入您的回答" allow-clear v-if="question.type == 2" style="width: 100%"/>
                 <!--                TYPE = 3代表数字-->
-                <a-input-number v-if="question.type == 3" style="width: 100%"/>
+                <a-input-number v-if="question.type == 3" style="width: 50%"/>
                 <!--                TYPE = 4代表评价-->
                 <a-rate :default-value="2.5" allow-half v-if="question.type == 4" style="width: 100%"/>
-                <!--                TYPE = 5代表级联单选-->
-                <a-cascader
-                        :options="question.choices"
-                        :load-data="loadData"
-                        placeholder="Please select"
-                        change-on-select
-                        v-if="question.type == 5"
-                />
             </div>
             <br>
         </div>
@@ -40,7 +32,7 @@
 <script>
 
     export default {
-        name: "Watch",
+        name: "Write",
         data() {
             return {
                 formLayout: 'vertical',

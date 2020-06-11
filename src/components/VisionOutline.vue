@@ -16,7 +16,7 @@
             <div class="ant-statistic-title">填写地域分布</div>
             <div style="min-height: 500px; justify-content: center;position: relative" id="map"/>
         </div>
-        <router-link :to="`vision-detail`">
+        <router-link :to="`/vision-detail/123`">
             <a-button type="primary" style="margin-top: 15px">
                 查看问题统计
                 <a-icon type="right"/>
@@ -84,9 +84,6 @@
                 deadTime: 1000 * 60 * 60 * 24 * 2 + 1000 * 30,
                 fillNumber: 1000,
                 number: "1000",
-                questionTypes: [],
-                questions: [],
-                answers: [],
                 title: "123213",
                 type: "1",
             };
@@ -106,9 +103,6 @@
                 } else {
                     _this.number = "无限制"
                 }
-                _this.questionTypes = data.questionTypes;
-                _this.questions = data.questions;
-                _this.answers = data.answers;
                 _this.title = data.title;
                 if (data.type === 0) {
                     _this.type = "只限注册用户";
@@ -119,7 +113,6 @@
                 } else {
                     _this.type = "无限制问卷类型";
                 }
-                _this.n = _this.questions.length;
             });
         },
     };

@@ -6,7 +6,7 @@
             </div>
             <a-menu theme="dark" mode="inline">
                 <a-menu-item key="1" v-if="this.token == null">
-                    <router-link :to="`login`">
+                    <router-link :to="`/login`">
                         <a-icon type="user"/>
                         <span class="nav-text">登录</span>
                     </router-link>
@@ -15,26 +15,26 @@
                     <a-icon type="user"/>
                     <span class="nav-text">{{this.name}}</span>
                 </a-menu-item>
-                <a-menu-item key="2">
-                    <router-link :to="`register`">
+                <a-menu-item key="2" v-if="this.token == null">
+                    <router-link :to="`/register`">
                         <a-icon type="video-camera"/>
                         <span class="nav-text">注册</span>
                     </router-link>
                 </a-menu-item>
                 <a-menu-item key="3">
-                    <router-link :to="`publish`">
+                    <router-link :to="`/publish`">
                         <a-icon type="upload"/>
                         <span class="nav-text">发布问卷</span>
                     </router-link>
                 </a-menu-item>
                 <a-menu-item key="4">
-                    <router-link :to="`watch`">
+                    <router-link :to="`/RectifyList`">
                         <a-icon type="user"/>
-                        <span class="nav-text">查看问卷</span>
+                        <span class="nav-text">编辑问卷</span>
                     </router-link>
                 </a-menu-item>
                 <a-menu-item key="5">
-                    <router-link :to="`vision-outline`">
+                    <router-link :to="`/VisionList`">
                         <a-icon type="area-chart" />
                         <span class="nav-text">问卷统计</span>
                     </router-link>
