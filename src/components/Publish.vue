@@ -35,7 +35,7 @@
                     <label>C  </label>
                     <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项C"/>
                 </div>
-                <label>D  </label>
+                <label>D</label>
                 <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项D"/>
             </span>
             <span v-if="domain.index === 2">
@@ -54,49 +54,48 @@
                 <label>D  </label>
                 <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项D"/>
             </span>
-            <a-input
-                    v-if="domain.index === 4"
-                    v-model="domain.value"
-                    placeholder="请输入文本"
-                    style="width: 60%"
-            />
-            <a-input-number
-                    v-if="domain.index === 3 "
-                    v-model="domain.value"
-                    placeholder="请输入数字"
-                    @change="onChangeNumber"
-                    :style="{ width: '60%', marginTop: '10px' }"
-            />
-            <span>
-                <div>
-                    <a-rate v-if="domain.index === 5" :default-value="2.5" allow-half v-model="domain.value" :tooltips="desc" />
-                    <span class="ant-rate-text">{{ desc[value - 1] }}</span>
-                </div>
+            <span v-if="domain.index === 3 ">
+                <a-input-number
+                        v-model="domain.value"
+                        placeholder="请输入数字"
+                        @change="onChangeNumber"
+                        :style="{ width: '60%', marginTop: '10px' }"
+                />
             </span>
-            <div>
-                <a-collapse v-if="domain.index === 6" v-model = "domain.value" @change="changeActivekey">
+            <span v-if="domain.index === 4">
+                <a-input
+                        v-model="domain.value"
+                        placeholder="请输入文本"
+                        style="width: 60%"
+                />
+            </span>
+            <span v-if="domain.index === 5">
+                <span class="ant-rate-text">{{ desc[value - 1] }}</span>
+            </span>
+            <span>
+                <a-collapse v-if="domain.index === 6" v-model="domain.value" @change="changeActivekey">
                     <a-collapse-panel key="1" header="A">
                         <a-input :style="{ width: '60%', marginBottom: '10px' }" placeholder="请输入选项A"/>
                         <a-collapse default-active-key="4">
                             <a-collapse-panel key="4" header="级联选项">
                                 <div>
                                     <div>
-                                        <label>问题描述  </label>
+                                        <label>问题描述 </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入问题描述"/>
                                     </div>
                                     <div>
-                                        <label>A  </label>
+                                        <label>A </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项A"/>
                                     </div>
                                     <div>
-                                        <label>B  </label>
+                                        <label>B </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项B"/>
                                     </div>
                                     <div>
-                                        <label>C  </label>
+                                        <label>C </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项C"/>
                                     </div>
-                                    <label>D  </label>
+                                    <label>D </label>
                                     <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项D"/>
                                 </div>
                             </a-collapse-panel>
@@ -108,22 +107,22 @@
                             <a-collapse-panel key="4" header="级联选项">
                                 <div>
                                     <div>
-                                        <label>问题描述  </label>
+                                        <label>问题描述 </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入问题描述"/>
                                     </div>
                                     <div>
-                                        <label>A  </label>
+                                        <label>A </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项A"/>
                                     </div>
                                     <div>
-                                        <label>B  </label>
+                                        <label>B </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项B"/>
                                     </div>
                                     <div>
-                                        <label>C  </label>
+                                        <label>C </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项C"/>
                                     </div>
-                                    <label>D  </label>
+                                    <label>D </label>
                                     <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项D"/>
                                 </div>
                             </a-collapse-panel>
@@ -135,22 +134,22 @@
                             <a-collapse-panel key="4" header="级联选项">
                                 <div>
                                     <div>
-                                        <label>问题描述  </label>
+                                        <label>问题描述 </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入问题描述"/>
                                     </div>
                                     <div>
-                                        <label>A  </label>
+                                        <label>A </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项A"/>
                                     </div>
                                     <div>
-                                        <label>B  </label>
+                                        <label>B </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项B"/>
                                     </div>
                                     <div>
-                                        <label>C  </label>
+                                        <label>C </label>
                                         <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项C"/>
                                     </div>
-                                    <label>D  </label>
+                                    <label>D </label>
                                     <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项D"/>
                                 </div>
                             </a-collapse-panel>
@@ -160,27 +159,25 @@
                         <a-input :style="{ width: '60%', marginBottom: '10px' }" placeholder="请输入选项D"/>
                         <a-collapse default-active-key="4">
                             <a-collapse-panel key="4" header="级联选项">
-                                <p>
                                 <div>
-                                    <label>A  </label>
+                                    <label>A </label>
                                     <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项A"/>
                                 </div>
                                 <div>
-                                    <label>B  </label>
+                                    <label>B </label>
                                     <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项B"/>
                                 </div>
                                 <div>
-                                    <label>C  </label>
+                                    <label>C </label>
                                     <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项C"/>
                                 </div>
-                                <label>D  </label>
+                                <label>D </label>
                                 <a-input :style="{ width: '60%', marginTop: '10px' }" placeholder="请输入选项D"/>
-                                </p>
                             </a-collapse-panel>
                         </a-collapse>
                     </a-collapse-panel>
                 </a-collapse>
-            </div>
+            </span>
             <a-icon
                     v-if="dynamicValidateForm.domains.length > 1"
                     class="dynamic-delete-button"
@@ -236,6 +233,7 @@
 
 <script>
     export default {
+        name: "Publish",
         data() {
             return {
                 formItemLayout: {

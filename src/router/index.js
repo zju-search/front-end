@@ -9,6 +9,8 @@ import Register from "../components/Register";
 import VisionOutline from "../components/VisionOutline";
 import VisionDetail from "../components/VisionDetail";
 import QuestionType from "../components/QuestionType";
+import Publish from "../components/Publish";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -56,6 +58,11 @@ const routes = [
                 path: '/QuestionType/:id/',
                 name: 'QuestionType',
                 component: QuestionType
+            },
+            {
+                path: '/publish',
+                name: 'Publish',
+                component: Publish
             }
         ]
     }
