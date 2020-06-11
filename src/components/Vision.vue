@@ -18,7 +18,6 @@
         </div>
         <div v-for="(question,index) in questions" :key="index">
             <div class="ant-statistic-title">{{index+1}}:{{question}}</div>
-            <div v-if></div>
         </div>
     </div>
 </template>
