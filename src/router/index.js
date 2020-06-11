@@ -4,10 +4,9 @@ import Index from "../components/Index";
 import Login from "../components/Login";
 import Watch from "../components/Watch";
 import Register from "../components/Register";
-import Vision from "../components/Vision";
-import Publish from "../components/Publish";
-
-Vue.use(VueRouter)
+import VisionOutline from "../components/VisionOutline";
+import VisionDetail from "../components/VisionDetail";
+Vue.use(VueRouter);
 
 const routes = [
     {
@@ -29,13 +28,13 @@ const routes = [
                 name: 'Register',
                 component: Register
             },{
-                path: '/vision',
-                name: 'Vision',
-                component: Vision
+                path: '/vision-outline/:id/',
+                name: 'VisionOutline',
+                component: VisionOutline
             },{
-                path: '/publish',
-                name: 'Publish',
-                component: Publish
+                path:'/vision-detail/:id/',
+                name: 'VisionDeatil',
+                component: VisionDetail
             }]
     }
 ]
