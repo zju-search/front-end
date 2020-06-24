@@ -133,12 +133,12 @@ const DetailData = function () {
     return Data;
 };
 
-const VisionListData = function () {
+const TaskListData = function () {
     let questions = [];
-    for (let i = 0; i < Random.natural(1, 200); i++) {
+    for (let i = 0; i < Random.natural(1, 4); i++) {
         let question = {
             id: Random.natural(0, 10000).toString(),
-            title: Random.ctitle()
+            title: Random.title()
         };
         questions.push(question);
     }
@@ -153,4 +153,4 @@ Mock.mock('/api/register', 'post', RegisterData);
 Mock.mock('/api/getQuestion', 'post', QuestionData);
 Mock.mock('/api/statisticQuestionInfo', 'post', VisionData);
 Mock.mock('/api/statisticQuestion', 'post', DetailData);
-Mock.mock('/api/visionList', 'post', VisionListData);
+Mock.mock('/api/taskList', 'post', TaskListData);

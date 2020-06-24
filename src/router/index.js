@@ -4,13 +4,11 @@ import Index from "../components/Index";
 import Login from "../components/Login";
 import Write from "../components/Write";
 import WriteList from "../components/RectifyList";
-import VisionList from "../components/VisionList";
-import Register from "../components/Register";
 import VisionOutline from "../components/VisionOutline";
 import VisionDetail from "../components/VisionDetail";
 import QuestionType from "../components/QuestionType";
-import Publish from "../components/Publish";
-
+import trainTask from "../components/trainTask";
+import TaskList from "../components/TaskList";
 Vue.use(VueRouter);
 
 const routes = [
@@ -30,11 +28,6 @@ const routes = [
                 component: Write
             },
             {
-                path: '/register',
-                name: 'Register',
-                component: Register
-            },
-            {
                 path: '/vision-outline/:id/',
                 name: 'VisionOutline',
                 component: VisionOutline
@@ -50,9 +43,9 @@ const routes = [
                 component: WriteList
             },
             {
-                path: '/VisionList',
-                name: 'VisionList',
-                component: VisionList
+                path: '/TaskList',
+                name: 'TaskList',
+                component: TaskList
             },
             {
                 path: '/QuestionType/:id/',
@@ -60,9 +53,9 @@ const routes = [
                 component: QuestionType
             },
             {
-                path: '/publish',
-                name: 'Publish',
-                component: Publish
+                path: '/trainTask',
+                name: 'trainTask',
+                component: trainTask
             }
         ]
     }

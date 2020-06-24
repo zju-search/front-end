@@ -1,57 +1,37 @@
 <template>
-    <a-layout id="components-layout-demo-responsive">
-        <a-layout-sider breakpoint="lg" collapsed-width="0" @collapse="onCollapse" @breakpoint="onBreakpoint">
-            <div><img class="logo" src="../assets/logo.jpeg"/><b><span
-                    style="color: whitesmoke;font-size: 15px ">溯源问卷网</span></b>
-            </div>
-            <a-menu theme="dark" mode="inline">
-                <a-menu-item key="1" v-if="this.token == null">
-                    <router-link :to="`/login`">
-                        <a-icon type="user"/>
-                        <span class="nav-text">登录</span>
-                    </router-link>
-                </a-menu-item>
-                <a-menu-item key="1" v-if="this.token != null">
-                    <a-icon type="user"/>
-                    <span class="nav-text">{{this.name}}</span>
-                </a-menu-item>
-                <a-menu-item key="2" v-if="this.token == null">
-                    <router-link :to="`/register`">
-                        <a-icon type="video-camera"/>
-                        <span class="nav-text">注册</span>
-                    </router-link>
-                </a-menu-item>
-                <a-menu-item key="3">
-                    <router-link :to="`/publish`">
-                        <a-icon type="upload"/>
-                        <span class="nav-text">发布问卷</span>
-                    </router-link>
-                </a-menu-item>
-                <a-menu-item key="4">
-                    <router-link :to="`/RectifyList`">
-                        <a-icon type="user"/>
-                        <span class="nav-text">编辑问卷</span>
-                    </router-link>
-                </a-menu-item>
-                <a-menu-item key="5">
-                    <router-link :to="`/VisionList`">
-                        <a-icon type="area-chart" />
-                        <span class="nav-text">问卷统计</span>
-                    </router-link>
-                </a-menu-item>
-            </a-menu>
-        </a-layout-sider>
-        <a-layout>
-            <a-layout-header></a-layout-header>
-            <a-layout-content :style="{ margin: '12px 24px 0' }">
-                <div :style="{padding: '24px', background: '#fff', minHeight: '360px' }">
-                    <RouterView :style="{textAlign:'left'}"></RouterView>
-                </div>
-            </a-layout-content>
-            <a-layout-footer style="textAlign: center">
-                Powered By Ant Design ©2020 Created by Zouziyu
-            </a-layout-footer>
-        </a-layout>
+    <a-layout>
+        <a-menu v-model="current" mode="horizontal">
+            <a-menu-item>
+                <a-icon type="mail"/>
+                首页
+            </a-menu-item>
+            <a-menu-item>
+                <a-icon type="appstore"/>
+                训练任务
+            </a-menu-item>
+            <a-menu-item>
+                <a-icon type="setting"/>
+                模型应用
+            </a-menu-item>
+            <a-menu-item>
+                <a-icon type="project"/>
+                数据字典
+            </a-menu-item>
+            <a-menu-item :style="{float:'right'}">
+                <a-icon type="logout"/>
+                退出
+            </a-menu-item>
+            <a-menu-item :style="{float:'right'}">
+                <a-icon type="team"/>
+                西部信托有限公司
+            </a-menu-item>
+        </a-menu>
+        <a-layout-content :style="{ margin: '20px 20px'}">
+            <RouterView></RouterView>
+        </a-layout-content>
+        <a-layout-footer style="textAlign: center">
+            Powered By Ant Design ©2020
+        </a-layout-footer>
     </a-layout>
 </template>
 
@@ -79,7 +59,6 @@
 <style>
     #components-layout-demo-responsive .logo {
         height: 45px;
-        background: rgba(255, 255, 255, 0.2);
-        margin: 16px;
+        margin: 10px;
     }
 </style>
