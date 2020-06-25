@@ -24,7 +24,7 @@
                 <a-select-option value="是否购买基金">是否购买基金</a-select-option>
             </a-select>
         </a-modal>
-        <!--2-3新增数据集的弹窗-->
+        <!--3-2新增数据集的弹窗-->
         <a-modal v-model="add_dataset_visible" title="| 新增数据集" @ok="finishAddDataset">
             <a-form-model ref="dynamicValidateForm" :model="dataset_attribute">
                 <a-form-model-item>
@@ -64,6 +64,47 @@
                 </a-form-model-item>
             </a-form-model>
         </a-modal>
+        <!--3-2-1修改样本时间的弹窗-->
+        <a-modal v-model="change_sample_time_visible" title="| 修改时间" @ok="finishChangeSampleTime">
+            <a-form-model ref="dynamicValidateForm" :model="dataset_attribute">
+                <a-form-model-item>
+                    <label style="margin-right: 15px">X样本时间</label>
+                    <a-range-picker v-model="dataset_attribute.x_sample_date"/>
+                </a-form-model-item>
+                <a-form-model-item>
+                    <label style="margin-right: 15px">Y样本时间</label>
+                    <a-range-picker v-model="dataset_attribute.y_sample_date"/>
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
+        <!--3-2-2修改样本筛选条件的弹窗-->
+        <a-modal v-model="change_sample_rule_visible" title="| 修改筛选条件" @ok="finishChangeSampleRule">
+            <a-form-model ref="dynamicValidateForm" :model="dataset_attribute">
+                <a-form-model-item>
+                    <label style="margin-right: 15px">筛选规则</label>
+                    <a-button type="dashed" @click="addDatasetAttribute">
+                        <a-icon type="plus"/>
+                    </a-button>
+                </a-form-model-item>
+                <a-form-model-item v-for="rule in dataset_attribute.rules"
+                                   :key="rule.key">
+                    <a-input v-model="rule.name" placeholder="名称"
+                             style="width: 25%; margin-right: 3%"/>
+                    <a-select style="width: 25%;margin-right: 3%" v-model="rule.symbol">
+                        <a-select-option value="＞">＞</a-select-option>
+                        <a-select-option value="＜">＜</a-select-option>
+                        <a-select-option value="＝">＝</a-select-option>
+                        <a-select-option value="≥">≥</a-select-option>
+                        <a-select-option value="≤">≤</a-select-option>
+                        <a-select-option value="≠">≠</a-select-option>
+                    </a-select>
+                    <a-input v-model="rule.value" placeholder="值" style="width: 30%;margin-right: 3%"/>
+                    <a-icon v-if="dataset_attribute.rules.length >= 1"
+                            class="dynamic-delete-button" type="minus-circle-o" @click="removeDatasetAttribute(rule)"
+                    />
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
         <a-button type="primary" :style="{marginBottom:'16px'}" @click="showLaunchTask">发起任务</a-button>
         <a-card>
             <a-descriptions :title="`| 任务描述  ${task.launch_task.index}`">
@@ -82,11 +123,13 @@
                 <a v-for="key in task.key_select" v-bind:key="key"> {{key}} </a>
             </a-card>
             <a-card size="small" title="数据集" style="margin-top: 15px">
-                <a-table :data-source="task.dataset_attribute" :columns="dataset_columns">
-                    <div slot="action" href="javascript:">
-                        <a-button type="primary">样本时间</a-button>
-                        <a-button type="primary" style="margin-left: 15px">筛选规则</a-button>
-                        <a-button type="primary" style="margin-left: 15px">删除</a-button>
+                <a-table :data-source="task.dataset_attribute" :columns="dataset_columns" :rowKey='record=>record.index'>
+                    <div slot="action" slot-scope="record">
+                        <a-button type="primary" @click="showChangeSampleTime(record)">样本时间</a-button>
+                        <a-button type="primary" style="margin-left: 15px" @click="showChangeSampleRule(record)">筛选规则
+                        </a-button>
+                        <a-button type="primary" style="margin-left: 15px" @click="removeDataset(record)">删除
+                        </a-button>
                     </div>
                 </a-table>
             </a-card>
@@ -107,6 +150,8 @@
 </template>
 
 <script>
+    import moment from 'moment';
+
     export default {
         name: "trainTask",
         data() {
@@ -134,7 +179,7 @@
                     },
                     {
                         title: '操作',
-                        key: 'operation',
+                        key: 'action',
                         fixed: 'right',
                         scopedSlots: {customRender: 'action'},
                     },
@@ -172,7 +217,7 @@
                     },
                     {
                         title: '操作',
-                        key: 'operation',
+                        key: 'action',
                         fixed: 'right',
                         scopedSlots: {customRender: 'action'},
                     },
@@ -191,7 +236,10 @@
                 'launch_task_visible': false,
                 'key_select_visible': false,
                 'add_dataset_visible': false,
-                'new_rules': '113123'
+                'change_sample_time_visible': false,
+                'change_sample_rule_visible': false,
+                'current_dataset': 0,
+                'save_dataset_attribute': [],
             };
         },
         methods: {
@@ -204,9 +252,21 @@
             showAddDataset() {
                 this.add_dataset_visible = true;
             },
+            showChangeSampleTime(item) {
+                let index = this.task.dataset_attribute.indexOf(item);
+                this.current_dataset = index;
+                this.change_sample_time_visible = true;
+                this.dataset_attribute = this.save_dataset_attribute[index];
+            },
+            showChangeSampleRule(item) {
+                let index = this.task.dataset_attribute.indexOf(item);
+                this.current_dataset = index;
+                this.change_sample_rule_visible = true;
+                this.dataset_attribute = this.save_dataset_attribute[index];
+            },
             finishLaunchTask() {
                 this.launch_task_visible = false;
-                this.task.aunch_task = this.launch_task;
+                this.task.launch_task = this.launch_task;
                 this.launch_task = {'index': '', 'description': '', 'category': ''};
             },
             finishKeySelect() {
@@ -216,15 +276,36 @@
             },
             finishAddDataset() {
                 this.add_dataset_visible = false;
+                this.save_dataset_attribute.push(Object.assign({}, this.dataset_attribute));
                 let rules = this.dataset_attribute.rules;
                 let new_rules = [];
                 for (let i = 0; i < rules.length; i++) {
                     new_rules.push(rules[i].name + rules[i].symbol + rules[i].value);
                 }
-                this.dataset_attribute.x_sample_date = this.dataset_attribute.x_sample_date.join(' to ');
-                this.dataset_attribute.y_sample_date = this.dataset_attribute.y_sample_date.join(' to ');
+                this.dataset_attribute.x_sample_date = moment(this.dataset_attribute.x_sample_date[0]).format("YYYY-DD-MM") + ' to '
+                    + moment(this.dataset_attribute.x_sample_date[1]).format("YYYY-DD-MM");
+                this.dataset_attribute.y_sample_date = moment(this.dataset_attribute.y_sample_date[0]).format("YYYY-DD-MM") + ' to '
+                    + moment(this.dataset_attribute.y_sample_date[1]).format("YYYY-DD-MM");
                 this.dataset_attribute.rules = new_rules.join(' and ');
-                this.task.dataset_attribute.push(this.dataset_attribute);
+                this.task.dataset_attribute.push(Object.assign({}, this.dataset_attribute));
+                this.dataset_attribute = {rules: [], x_sample_date: [], y_sample_date: []};
+            },
+            finishChangeSampleTime() {
+                this.change_sample_time_visible = false;
+                this.task.dataset_attribute[this.current_dataset].x_sample_date = moment(this.dataset_attribute.x_sample_date[0]).format("YYYY-DD-MM") + ' to '
+                    + moment(this.dataset_attribute.x_sample_date[1]).format("YYYY-DD-MM");
+                this.task.dataset_attribute[this.current_dataset].y_sample_date = moment(this.dataset_attribute.y_sample_date[0]).format("YYYY-DD-MM") + ' to '
+                    + moment(this.dataset_attribute.y_sample_date[1]).format("YYYY-DD-MM");
+                this.dataset_attribute = {rules: [], x_sample_date: [], y_sample_date: []};
+            },
+            finishChangeSampleRule() {
+                this.change_sample_rule_visible = false;
+                let rules = this.dataset_attribute.rules;
+                let new_rules = [];
+                for (let i = 0; i < rules.length; i++) {
+                    new_rules.push(rules[i].name + rules[i].symbol + rules[i].value);
+                }
+                this.task.dataset_attribute[this.current_dataset].rules = new_rules.join(' and ');
                 this.dataset_attribute = {rules: [], x_sample_date: [], y_sample_date: []};
             },
             addDatasetAttribute() {
@@ -235,6 +316,11 @@
             removeDatasetAttribute(item) {
                 let index = this.dataset_attribute.rules.indexOf(item);
                 this.dataset_attribute.rules.splice(index, 1);
+            },
+            removeDataset(item) {
+                let index = this.task.dataset_attribute.indexOf(item);
+                this.task.dataset_attribute.splice(index, 1);
+                this.save_dataset_attribute.splice(index, 1);
             },
         }
     };

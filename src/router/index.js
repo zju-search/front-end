@@ -4,8 +4,6 @@ import Index from "../components/Index";
 import Login from "../components/Login";
 import Write from "../components/Write";
 import WriteList from "../components/RectifyList";
-import VisionOutline from "../components/VisionOutline";
-import VisionDetail from "../components/VisionDetail";
 import QuestionType from "../components/QuestionType";
 import trainTask from "../components/trainTask";
 import TaskList from "../components/TaskList";
@@ -26,16 +24,6 @@ const routes = [
                 path: '/write/:id/',
                 name: 'write',
                 component: Write
-            },
-            {
-                path: '/vision-outline/:id/',
-                name: 'VisionOutline',
-                component: VisionOutline
-            },
-            {
-                path: '/vision-detail/:id/',
-                name: 'VisionDeatil',
-                component: VisionDetail
             },
             {
                 path: '/RectifyList',
