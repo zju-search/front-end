@@ -105,6 +105,52 @@
                 </a-form-model-item>
             </a-form-model>
         </a-modal>
+        <!--5-2新增训练的弹窗-->
+        <a-modal v-model="add_train_visible" title="| 新增训练" @ok="finishAddTrain">
+            <a-form-model ref="dynamicValidateForm" :model="add_train">
+                <a-form-model-item>
+                    <label>任务编号</label>
+                    <a-input v-model="add_train.index" style="margin-left: 10px;width: 50%"/>
+                </a-form-model-item>
+                <a-form-model-item>
+                    <label>模型名称</label>
+                    <a-select default-value="DNN" style="margin-left: 10px;width: 50%" v-model="add_train.model">
+                        <a-select-option value="DNN">
+                            DNN
+                        </a-select-option>
+                        <a-select-option value="score">
+                            打分卡
+                        </a-select-option>
+                        <a-select-option value="RNN">
+                            时序神经网络
+                        </a-select-option>
+                        <a-select-option value="XGBoost">
+                            XGBoost
+                        </a-select-option>
+                    </a-select>
+                </a-form-model-item>
+                <a-form-model-item v-if="add_train.model == 'DNN'">
+                    <label>输入中间隐层的数量(逗号分割)</label>
+                    <a-input v-model="add_train.middle_layer" style="margin-left: 10px;width: 50%"/>
+                </a-form-model-item>
+                <a-form-model-item>
+                    <label>训练数据集</label>
+                    <a-radio-group v-model="add_train.train_dataset" style="margin-left: 20px;width: 50%">
+                        <a-radio :value="dataset.index" v-for="dataset in task.dataset_attribute" :key="dataset.index">
+                            {{dataset.index}}
+                        </a-radio>
+                    </a-radio-group>
+                </a-form-model-item>
+                <a-form-model-item>
+                    <label>验证数据集</label>
+                    <a-radio-group v-model="add_train.validate_dataset" style="margin-left: 20px;width: 50%">
+                        <a-radio :value="dataset.index" v-for="dataset in task.dataset_attribute" :key="dataset.index">
+                            {{dataset.index}}
+                        </a-radio>
+                    </a-radio-group>
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
         <a-button type="primary" :style="{marginBottom:'16px'}" @click="showLaunchTask">发起任务</a-button>
         <a-card>
             <a-descriptions :title="`| 任务描述  ${task.launch_task.index}`">
@@ -123,7 +169,8 @@
                 <a v-for="key in task.key_select" v-bind:key="key"> {{key}} </a>
             </a-card>
             <a-card size="small" title="数据集" style="margin-top: 15px">
-                <a-table :data-source="task.dataset_attribute" :columns="dataset_columns" :rowKey='record=>record.index'>
+                <a-table :data-source="task.dataset_attribute" :columns="dataset_columns"
+                         :rowKey='record=>record.index'>
                     <div slot="action" slot-scope="record">
                         <a-button type="primary" @click="showChangeSampleTime(record)">样本时间</a-button>
                         <a-button type="primary" style="margin-left: 15px" @click="showChangeSampleRule(record)">筛选规则
@@ -135,14 +182,17 @@
             </a-card>
             <a-descriptions style="margin-top: 15px">
                 <a-descriptions-item label="模型训练">
-                    <a-button type="primary" :style="{marginLeft:'15px'}">新增训练</a-button>
+                    <a-button type="primary" :style="{marginLeft:'15px'}" @click="showAddTrain">新增训练</a-button>
                 </a-descriptions-item>
             </a-descriptions>
-            <a-table :data-source="model_data" :columns="model_columns">
-                <div slot="action" href="javascript:">
-                    <a-button type="primary">重新训练</a-button>
-                    <a-button type="primary" style="margin-left: 15px">模型验证</a-button>
-                    <a-button type="primary" style="margin-left: 15px">删除</a-button>
+            <a-table :data-source="task.add_train" :columns="model_columns">
+                <div slot="performance" v-if="task.add_train.performance == null">
+                    训练中
+                    <a-spin/>
+                </div>
+                <div slot="action" href="javascript:" slot-scope="record">
+                    <a-button type="primary" @click="restartTrainModel(record)">重新训练</a-button>
+                    <a-button type="primary" style="margin-left: 15px" @click="DeleteTrainModel(record)">删除</a-button>
                 </div>
             </a-table>
         </a-card>
@@ -192,33 +242,23 @@
                     },
                     {
                         title: '模型名称',
-                        dataIndex: 'name',
-                        key: 'name',
+                        dataIndex: 'model',
+                        key: 'model',
                     },
                     {
-                        title: '参数',
-                        dataIndex: 'param',
-                        key: 'param',
-                    },
-                    {
-                        title: '数据集',
-                        dataIndex: 'dataset',
+                        title: '训练数据集',
+                        dataIndex: 'train_dataset',
                         key: 'dataset',
-                    },
-                    {
-                        title: '有效样本量',
-                        dataIndex: 'valid_sample',
-                        key: 'valid_sample',
                     },
                     {
                         title: '模型效果',
                         dataIndex: 'performance',
                         key: 'performance',
+                        scopedSlots: {customRender: 'performance'},
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        fixed: 'right',
                         scopedSlots: {customRender: 'action'},
                     },
                 ],
@@ -226,10 +266,12 @@
                 'key_select': [],
                 'add_dataset': [],
                 'dataset_attribute': {index: '', rules: [], x_sample_date: [], y_sample_date: []},
+                'add_train': {'index': '', 'model': '', 'dataset': '', 'middle_layer': '', train_dataset: ''},
                 'task': {
                     'launch_task': {'index': '', 'description': '', 'category': ''},
                     'key_select': [],
                     'dataset_attribute': [],
+                    'add_train': []
                 },
                 'dataset_data': [],
                 'model_data': [],
@@ -238,6 +280,7 @@
                 'add_dataset_visible': false,
                 'change_sample_time_visible': false,
                 'change_sample_rule_visible': false,
+                'add_train_visible': false,
                 'current_dataset': 0,
                 'save_dataset_attribute': [],
             };
@@ -264,6 +307,10 @@
                 this.change_sample_rule_visible = true;
                 this.dataset_attribute = this.save_dataset_attribute[index];
             },
+            showAddTrain() {
+                this.add_train_visible = true;
+            },
+            // 点击确定按钮的部分
             finishLaunchTask() {
                 this.launch_task_visible = false;
                 this.task.launch_task = this.launch_task;
@@ -308,6 +355,12 @@
                 this.task.dataset_attribute[this.current_dataset].rules = new_rules.join(' and ');
                 this.dataset_attribute = {rules: [], x_sample_date: [], y_sample_date: []};
             },
+            finishAddTrain() {
+                this.add_train_visible = false;
+                this.task.add_train.push(Object.assign({}, this.add_train));
+                this.add_train = {'index': '', 'description': '', 'category': ''};
+            },
+            // 操作某些元素的实现部分
             addDatasetAttribute() {
                 this.dataset_attribute.rules.push({
                     name: '', symbol: '', value: '', key: Date.now(),
@@ -321,6 +374,14 @@
                 let index = this.task.dataset_attribute.indexOf(item);
                 this.task.dataset_attribute.splice(index, 1);
                 this.save_dataset_attribute.splice(index, 1);
+            },
+            restartTrainModel(item) {
+                let index = this.task.dataset_attribute.indexOf(item);
+                this.task.add_train.splice(index, 1);
+            },
+            DeleteTrainModel(record) {
+                let index = this.task.dataset_attribute.indexOf(record);
+                this.task.add_train.splice(index, 1);
             },
         }
     };
