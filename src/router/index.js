@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from "../components/Index";
 import Login from "../components/Login";
-import Write from "../components/Write";
+import modelApplication from "../components/modelApplication";
 import WriteList from "../components/RectifyList";
 import QuestionType from "../components/QuestionType";
 import trainTask from "../components/trainTask";
@@ -21,9 +21,9 @@ const routes = [
                 component: Login
             },
             {
-                path: '/write/:id/',
-                name: 'write',
-                component: Write
+                path: '/modelApplication/:id/',
+                name: 'modelApplication',
+                component: modelApplication
             },
             {
                 path: '/RectifyList',
