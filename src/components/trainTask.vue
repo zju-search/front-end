@@ -131,7 +131,7 @@
                 </a-form-model-item>
                 <a-form-model-item v-if="add_train.model == 'DNN'">
                     <label>输入中间隐层的数量(逗号分割)</label>
-                    <a-input v-model="add_train.middle_layer" style="margin-left: 10px;width: 50%"/>
+                    <a-input v-model="add_train.param" style="margin-left: 10px;width: 50%"/>
                 </a-form-model-item>
                 <a-form-model-item>
                     <label>训练数据集</label>
@@ -141,15 +141,32 @@
                         </a-radio>
                     </a-radio-group>
                 </a-form-model-item>
-                <a-form-model-item>
-                    <label>验证数据集</label>
-                    <a-radio-group v-model="add_train.validate_dataset" style="margin-left: 20px;width: 50%">
-                        <a-radio :value="dataset.index" v-for="dataset in task.dataset_attribute" :key="dataset.index">
-                            {{dataset.index}}
-                        </a-radio>
-                    </a-radio-group>
-                </a-form-model-item>
             </a-form-model>
+        </a-modal>
+        <!--7-2模型验证的弹窗-->
+        <a-modal v-model="show_model_verify" title="| 模型验证" @ok="finishVerifyTrain">
+            <template slot="footer">
+                <a-button type="primary" @click="showAddModelVerify">新增验证</a-button>
+                <a-button type="primary" @click="finishVerifyTrain">取消</a-button>
+            </template>
+            <a-table :data-source="task.train_verify[current_dataset]" :columns="model_verify_columns"
+                     :rowKey='record=>record.dataset'>
+                <div slot="performance">
+                    <label>AUC：0.75    KS：0.45</label>
+                </div>
+            </a-table>
+        </a-modal>
+        <!--7-3 新增模型验证的弹窗-->
+        <a-modal v-model="show_add_model_verify" :title='`| 新增验证-` + task.add_train[current_train].index'
+                 @ok="finishAddVerifyTrain" v-if="task.add_train.length > 0">
+            <a-form-model-item>
+                <label>验证集:</label>
+                <a-radio-group v-model="add_model_verify_validate_dataset" style="margin-left: 20px;width: 50%">
+                    <a-radio :value="dataset.index" v-for="dataset in task.dataset_attribute" :key="dataset.index">
+                        {{dataset.index}}
+                    </a-radio>
+                </a-radio-group>
+            </a-form-model-item>
         </a-modal>
         <a-button type="primary" :style="{marginBottom:'16px'}" @click="showLaunchTask">发起任务</a-button>
         <a-card>
@@ -192,6 +209,7 @@
                 </div>
                 <div slot="action" href="javascript:" slot-scope="record">
                     <a-button type="primary" @click="restartTrainModel(record)">重新训练</a-button>
+                    <a-button type="primary" style="margin-left: 15px" @click="showModelVerify(record)">模型验证</a-button>
                     <a-button type="primary" style="margin-left: 15px" @click="DeleteTrainModel(record)">删除</a-button>
                 </div>
             </a-table>
@@ -246,6 +264,11 @@
                         key: 'model',
                     },
                     {
+                        title: '参数',
+                        dataIndex: 'param',
+                        key: 'param',
+                    },
+                    {
                         title: '训练数据集',
                         dataIndex: 'train_dataset',
                         key: 'dataset',
@@ -262,27 +285,44 @@
                         scopedSlots: {customRender: 'action'},
                     },
                 ],
+                'model_verify_columns': [
+                    {
+                        title: '验证集',
+                        dataIndex: 'dataset',
+                        key: 'dataset',
+                    },
+                    {
+                        title: '模型效果',
+                        dataIndex: 'performance',
+                        key: 'performance',
+                        scopedSlots: {customRender: 'performance'},
+                    },],
                 'launch_task': {'index': '', 'description': '', 'category': ''},
                 'key_select': [],
                 'add_dataset': [],
                 'dataset_attribute': {index: '', rules: [], x_sample_date: [], y_sample_date: []},
-                'add_train': {'index': '', 'model': '', 'dataset': '', 'middle_layer': '', train_dataset: ''},
+                'add_train': {'index': '', 'model': '', 'dataset': '', 'param': '', train_dataset: ''},
                 'task': {
                     'launch_task': {'index': '', 'description': '', 'category': ''},
                     'key_select': [],
                     'dataset_attribute': [],
-                    'add_train': []
+                    'add_train': [],
+                    'train_verify': []
                 },
                 'dataset_data': [],
                 'model_data': [],
                 'launch_task_visible': false,
                 'key_select_visible': false,
                 'add_dataset_visible': false,
+                'show_model_verify': false,
+                'show_add_model_verify': false,
                 'change_sample_time_visible': false,
                 'change_sample_rule_visible': false,
                 'add_train_visible': false,
                 'current_dataset': 0,
+                'current_train': 0,
                 'save_dataset_attribute': [],
+                'add_model_verify_validate_dataset': '',
             };
         },
         methods: {
@@ -310,7 +350,14 @@
             showAddTrain() {
                 this.add_train_visible = true;
             },
-            // 点击确定按钮的部分
+            showModelVerify(item) {
+                let index = this.task.add_train.indexOf(item);
+                this.show_model_verify = true;
+                this.current_train = index;
+            },
+            showAddModelVerify() {
+                this.show_add_model_verify = true;
+            },
             finishLaunchTask() {
                 this.launch_task_visible = false;
                 this.task.launch_task = this.launch_task;
@@ -358,9 +405,16 @@
             finishAddTrain() {
                 this.add_train_visible = false;
                 this.task.add_train.push(Object.assign({}, this.add_train));
+                this.task.train_verify.push([]);
                 this.add_train = {'index': '', 'description': '', 'category': ''};
             },
-            // 操作某些元素的实现部分
+            finishVerifyTrain() {
+                this.show_model_verify = false;
+            },
+            finishAddVerifyTrain() {
+                this.show_add_model_verify = false;
+                this.task.train_verify[this.current_dataset].push({'dataset': this.add_model_verify_validate_dataset});
+            },
             addDatasetAttribute() {
                 this.dataset_attribute.rules.push({
                     name: '', symbol: '', value: '', key: Date.now(),
@@ -376,8 +430,7 @@
                 this.save_dataset_attribute.splice(index, 1);
             },
             restartTrainModel(item) {
-                let index = this.task.dataset_attribute.indexOf(item);
-                this.task.add_train.splice(index, 1);
+                this.$message.info('重新开始训练模型:' + item.index.toString());
             },
             DeleteTrainModel(record) {
                 let index = this.task.dataset_attribute.indexOf(record);
