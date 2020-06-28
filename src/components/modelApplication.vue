@@ -1,5 +1,17 @@
 <template>
     <a-card :title='`| 任务编号 ` + task_index'>
+        <a-modal v-model="show_screen_application" title="| 界面应用" @ok="finishScreenApplication">
+            <template slot="footer">
+                <a-button type="primary" @click="modelApplication" v-if="model_outcome == ''">应用</a-button>
+                <a-button type="primary" @click="IDReset" v-if="model_outcome != ''">ID重置</a-button>
+                <a-button type="primary" @click="finishScreenApplication">取消</a-button>
+            </template>
+            <label>请输入样本ID</label>
+            <a-input v-model="model_ID"/>
+            <label>模型结果:</label>
+            <a-spin v-if="model_outcome == ''"></a-spin>
+            <label v-if="model_outcome != ''">{{model_outcome}}</label>
+        </a-modal>
         <a-card>
             <h3>模型应用</h3>
             <a-table :data-source="model_dataset" :columns="model_columns">
@@ -7,7 +19,9 @@
                     AUC：0.75 KS：0.45
                 </div>
                 <div slot="action" href="javascript:" slot-scope="record">
-                    <a-button type="primary" @click="seenAPIDoc(record)">接口文档</a-button>
+                    <a-button type="primary" @click="showAPIDoc(record)">接口文档</a-button>
+                    <a-button type="primary" @click="showScreenApplication(record)" style="margin-left: 3%">应用文档
+                    </a-button>
                 </div>
             </a-table>
         </a-card>
@@ -103,7 +117,11 @@
                     {'index': '00001-1', 'model': 'DNN', 'param': 'N1:4', 'dataset': '00001-1'}
                 ],
                 'model_apply_dataset': [],
-                'task_index': ''
+                'task_index': '',
+                'screen_application': '',
+                'model_outcome': '',
+                'model_ID': '',
+                'show_screen_application': false,
             };
         },
         mounted() {
@@ -146,7 +164,7 @@
                     range: [0, 1],
                 },
                 value: {
-                    alias: '市值 (亿美元)',
+                    alias: '调用次数',
                     sync: true,
                     nice: true
                 },
@@ -176,10 +194,24 @@
             chart.render();
         },
         methods: {
-            seenAPIDoc(item) {
-                let index = this.task.dataset_attribute.indexOf(item);
-                console.log(index);
-            }
+            showAPIDoc(item) {
+                console.log(item);
+            },
+            showScreenApplication(item) {
+                console.log(item);
+                this.show_screen_application = true;
+            },
+            IDReset() {
+                this.model_ID = "";
+                this.model_outcome = "";
+            },
+            modelApplication() {
+                this.model_outcome = 5;
+            },
+            finishScreenApplication() {
+                this.show_screen_application = false;
+            },
+
         },
     };
 </script>
