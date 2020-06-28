@@ -22,21 +22,6 @@ const routes = [
                 component: Login
             },
             {
-                path: '/write/:id/',
-                name: 'write',
-                component: Write
-            },
-            {
-                path: '/vision-outline/:id/',
-                name: 'VisionOutline',
-                component: VisionOutline
-            },
-            {
-                path: '/vision-detail/:id/',
-                name: 'VisionDetail',
-                component: VisionDetail
-            },
-            {
                 path: '/RectifyList',
                 name: 'RectifyList',
                 component: WriteList

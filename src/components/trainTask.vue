@@ -39,8 +39,11 @@
                 </a-form-model-item>
                 <a-form-model-item v-for="rule in dataset_attribute.rules"
                                    :key="rule.key">
-                    <a-input v-model="rule.name" placeholder="名称"
-                             style="width: 25%; margin-right: 3%"/>
+                    <a-select v-model="rule.name" placeholder="名称" style="width: 25%; margin-right: 3%">
+                        <a-select-option v-for="option in task.key_select" :key="option">
+                            {{ option }}
+                        </a-select-option>
+                    </a-select>
                     <a-select style="width: 25%;margin-right: 3%" v-model="rule.symbol">
                         <a-select-option value="＞">＞</a-select-option>
                         <a-select-option value="＜">＜</a-select-option>
@@ -88,8 +91,11 @@
                 </a-form-model-item>
                 <a-form-model-item v-for="rule in dataset_attribute.rules"
                                    :key="rule.key">
-                    <a-input v-model="rule.name" placeholder="名称"
-                             style="width: 25%; margin-right: 3%"/>
+                    <a-select v-model="rule.name" placeholder="名称" style="width: 25%; margin-right: 3%">
+                        <a-select-option v-for="option in task.key_select" :key="option">
+                            {{ option }}
+                        </a-select-option>
+                    </a-select>
                     <a-select style="width: 25%;margin-right: 3%" v-model="rule.symbol">
                         <a-select-option value="＞">＞</a-select-option>
                         <a-select-option value="＜">＜</a-select-option>
@@ -109,8 +115,7 @@
         <a-modal v-model="add_train_visible" title="| 新增训练" @ok="finishAddTrain">
             <a-form-model ref="dynamicValidateForm" :model="add_train">
                 <a-form-model-item>
-                    <label>任务编号</label>
-                    <a-input v-model="add_train.index" style="margin-left: 10px;width: 50%"/>
+                    <label>任务编号 {{task.launch_task.index}}-{{task.add_train.length+1}}</label>
                 </a-form-model-item>
                 <a-form-model-item>
                     <label>模型名称</label>
@@ -130,8 +135,12 @@
                     </a-select>
                 </a-form-model-item>
                 <a-form-model-item v-if="add_train.model == 'DNN'">
-                    <label>输入中间隐层的数量(逗号分割)</label>
-                    <a-input v-model="add_train.param" style="margin-left: 10px;width: 50%"/>
+                    <label>中间隐层的维度</label>
+                    <a-input v-model="add_train.param1" style="margin-left: 10px;width: 50%"/>
+                </a-form-model-item>
+                <a-form-model-item v-if="add_train.model == 'RNN'">
+                    <label>中间层的数量</label>
+                    <a-input v-model="add_train.param1" style="margin-left: 10px;width: 50%"/>
                 </a-form-model-item>
                 <a-form-model-item>
                     <label>训练数据集</label>
@@ -152,7 +161,7 @@
             <a-table :data-source="task.train_verify[current_dataset]" :columns="model_verify_columns"
                      :rowKey='record=>record.dataset'>
                 <div slot="performance">
-                    <label>AUC：0.75    KS：0.45</label>
+                    <label>AUC：0.75 KS：0.45</label>
                 </div>
             </a-table>
         </a-modal>
@@ -301,7 +310,15 @@
                 'key_select': [],
                 'add_dataset': [],
                 'dataset_attribute': {index: '', rules: [], x_sample_date: [], y_sample_date: []},
-                'add_train': {'index': '', 'model': '', 'dataset': '', 'param': '', train_dataset: ''},
+                'add_train': {
+                    'index': '',
+                    'model': '',
+                    'dataset': '',
+                    'param1': '',
+                    'param2': '',
+                    'param3': '',
+                    train_dataset: ''
+                },
                 'task': {
                     'launch_task': {'index': '', 'description': '', 'category': ''},
                     'key_select': [],
