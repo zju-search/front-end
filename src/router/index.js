@@ -9,6 +9,7 @@ import VisionDetail from "../components/VisionDetail";
 import QuestionType from "../components/QuestionType";
 import trainTask from "../components/trainTask";
 import TaskList from "../components/TaskList";
+import dataDictionary from "../components/dataDictionary";
 Vue.use(VueRouter);
 
 const routes = [
@@ -34,7 +35,7 @@ const routes = [
             },
             {
                 path: '/vision-detail/:id/',
-                name: 'VisionDeatil',
+                name: 'VisionDetail',
                 component: VisionDetail
             },
             {
@@ -56,7 +57,12 @@ const routes = [
                 path: '/trainTask',
                 name: 'trainTask',
                 component: trainTask
-            }
+            },
+            {
+                path: '/dataDictionary',
+                name: 'dataDictionary',
+                component: dataDictionary
+            },
         ]
     }
 ]
