@@ -7,6 +7,7 @@ import WriteList from "../components/RectifyList";
 import QuestionType from "../components/QuestionType";
 import trainTask from "../components/trainTask";
 import TaskList from "../components/TaskList";
+import dataDictionary from "../components/dataDictionary";
 Vue.use(VueRouter);
 
 const routes = [
@@ -21,9 +22,19 @@ const routes = [
                 component: Login
             },
             {
-                path: '/modelApplication/:id/',
-                name: 'modelApplication',
-                component: modelApplication
+                path: '/write/:id/',
+                name: 'write',
+                component: Write
+            },
+            {
+                path: '/vision-outline/:id/',
+                name: 'VisionOutline',
+                component: VisionOutline
+            },
+            {
+                path: '/vision-detail/:id/',
+                name: 'VisionDetail',
+                component: VisionDetail
             },
             {
                 path: '/RectifyList',
@@ -44,7 +55,17 @@ const routes = [
                 path: '/trainTask',
                 name: 'trainTask',
                 component: trainTask
-            }
+            },
+            {
+                path: '/dataDictionary',
+                name: 'dataDictionary',
+                component: dataDictionary
+            },
+            {
+                path: '/modelApplication/:id/',
+                name: 'modelApplication',
+                component: modelApplication
+            },
         ]
     }
 ]
