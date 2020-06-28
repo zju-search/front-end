@@ -1,6 +1,6 @@
 <template>
     <a-layout>
-        <a-menu v-model="current" mode="horizontal">
+        <a-menu mode="horizontal">
             <a-menu-item>
                 <a-icon type="mail"/>
                 首页
@@ -45,20 +45,5 @@
             this.token = VueCookies.get("token");
             this.email = VueCookies.get("email");
         },
-        methods: {
-            onCollapse(collapsed, type) {
-                console.log(collapsed, type);
-            },
-            onBreakpoint(broken) {
-                console.log(broken);
-            },
-        },
     };
 </script>
-
-<style>
-    #components-layout-demo-responsive .logo {
-        height: 45px;
-        margin: 10px;
-    }
-</style>

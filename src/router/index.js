@@ -2,10 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from "../components/Index";
 import Login from "../components/Login";
-import Write from "../components/Write";
+import modelApplication from "../components/modelApplication";
 import WriteList from "../components/RectifyList";
-import VisionOutline from "../components/VisionOutline";
-import VisionDetail from "../components/VisionDetail";
 import QuestionType from "../components/QuestionType";
 import trainTask from "../components/trainTask";
 import TaskList from "../components/TaskList";
@@ -62,6 +60,11 @@ const routes = [
                 path: '/dataDictionary',
                 name: 'dataDictionary',
                 component: dataDictionary
+            },
+            {
+                path: '/modelApplication/:id/',
+                name: 'modelApplication',
+                component: modelApplication
             },
         ]
     }
