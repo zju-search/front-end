@@ -128,7 +128,7 @@
                         source: '浙江省政府',
                     }
                 ],
-                presentData: this.enterpriseData,
+                presentData: this.initialPresentData(),
                 currentTab: '1',
             }
         },
@@ -141,6 +141,9 @@
                 else{
                     this.presentData = this.individualData;
                 }
+            },
+            initialPresentData(){
+                this.presentData = this.enterpriseData;
             },
             showAll(){
                 if(this.currentTab == '1'){
