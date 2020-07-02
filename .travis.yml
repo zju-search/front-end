@@ -7,4 +7,4 @@ before_install:
 - chmod 600 ~/.ssh/id_rsa
 script:
 - ssh root@39.99.128.226 -o StrictHostKeyChecking=no 'cd /root/front-end && git pull && rm -rf ./dist && npm run build && cp -rf dist/ /root/nginx/ && cd /root/nginx
-  && docker-compose stop && docer-compose up -d'
+  && docker-compose stop && docker-compose up -d'
