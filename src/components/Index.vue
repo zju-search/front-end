@@ -212,7 +212,7 @@
             </a-menu-item>
             <a-menu-item>
                 <a-icon type="setting"/>
-                模型应用
+                模型
             </a-menu-item>
             <a-menu-item>
                 <a-icon type="project"/>
