@@ -1,13 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Index from "../components/Index";
-import Login from "../components/Login";
-import modelApplication from "../components/modelApplication";
-import WriteList from "../components/RectifyList";
-import QuestionType from "../components/QuestionType";
-import trainTask from "../components/trainTask";
-import TaskList from "../components/TaskList";
-import dataDictionary from "../components/dataDictionary";
+import StockDetail from "../components/StockDetail";
+import homepage from "../components/homepage";
+import MarketStocks from "../components/MarketStocks";
 Vue.use(VueRouter);
 
 const routes = [
@@ -17,39 +13,19 @@ const routes = [
         component: Index,
         children: [
             {
-                path: '/login',
-                name: 'Login',
-                component: Login
+                path: '/',
+                name: '行情中心',
+                component: homepage,
             },
             {
-                path: '/RectifyList',
-                name: 'RectifyList',
-                component: WriteList
+                path: '/MarketStocks/:market_index',
+                name: '细分行业股票',
+                component: MarketStocks
             },
             {
-                path: '/TaskList',
-                name: 'TaskList',
-                component: TaskList
-            },
-            {
-                path: '/QuestionType/:id/',
-                name: 'QuestionType',
-                component: QuestionType
-            },
-            {
-                path: '/trainTask',
-                name: 'trainTask',
-                component: trainTask
-            },
-            {
-                path: '/dataDictionary',
-                name: 'dataDictionary',
-                component: dataDictionary
-            },
-            {
-                path: '/modelApplication/:id/',
-                name: 'modelApplication',
-                component: modelApplication
+                path: '/StockDetail/:ts_code',
+                name: '股票明细',
+                component: StockDetail
             },
         ]
     }
