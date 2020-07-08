@@ -1,0 +1,260 @@
+<template>
+  <a-layout id="components-layout-demo-top" class="layout">
+    <a-layout-header >
+      <div class="logo" />
+      <a-menu theme="dark" mode="horizontal" :default-selected-keys="['2']" :style="{ lineHeight: '64px' }">
+        <a-menu-item key="1">
+          nav 1
+        </a-menu-item>
+        <a-menu-item key="2">
+          nav 2
+        </a-menu-item>
+        <a-menu-item key="3">
+          nav 3
+        </a-menu-item>
+      </a-menu>
+    </a-layout-header>
+    <a-layout-content style="padding: 0 50px">
+      <a-breadcrumb style="margin: 16px 0">
+      </a-breadcrumb>
+      <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
+        <div class="stock-info-title">
+          <a :href="companyLink" target="_blank" class="stock-info-name">{{name}}({{symbol}})</a>
+        </div>
+        <div class="table-operate">
+          <a-button-group>
+            <a-button v-if="page==1" disabled type="link">
+              <a-icon type="left" />上一页
+            </a-button>
+            <a-button v-if="page==2" type="link" @click="page-=1">
+              <a-icon type="left" />上一页
+            </a-button>
+            <a-button v-if="page==1" type="link" @click="page+=1"> 下一页
+              <a-icon type="right" />
+            </a-button>
+            <a-button v-if="page==2" disabled type="link"> 下一页
+              <a-icon type="right" />
+            </a-button>
+          </a-button-group>
+        </div>
+        <div class="stock-currency">
+          <span>财报币种：人民币(CNY)</span>
+        </div>
+        <div class="tables">
+          <a-table v-if="page==1" :columns="columns1" :data-source="data" bordered :pagination=false>
+          </a-table>
+          <a-table v-if="page==2" :columns="columns2" :data-source="data" bordered :pagination=false>
+            <template slot="name" slot-scope="text">
+              <a>{{ text }}</a>
+            </template>
+          </a-table>
+        </div>
+      </div>
+    </a-layout-content>
+    <a-layout-footer style="text-align: center">
+      Ant Design ©2018 Created by Ant UED
+    </a-layout-footer>
+  </a-layout>
+
+
+
+</template>
+
+<script>
+  const columns1 = [{
+      title: '报告期',
+      dataIndex: 'title',
+      width: '10%',
+      align: 'center'
+    },
+    {
+      title: '2019年报',
+      dataIndex: '2019',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2018年报',
+      dataIndex: '2018',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2017年报',
+      dataIndex: '2017',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2016年报',
+      dataIndex: '2016',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2015年报',
+      dataIndex: '2015',
+      width: '18%',
+      align: 'center'
+    },
+  ];
+  const columns2 = [{
+      title: '报告期',
+      dataIndex: 'title',
+      width: '10%',
+      align: 'center'
+    },
+    {
+      title: '2014年报',
+      dataIndex: '2014',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2013年报',
+      dataIndex: '2013',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2012年报',
+      dataIndex: '2012',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2011年报',
+      dataIndex: '2011',
+      width: '18%',
+      align: 'center'
+    },
+    {
+      title: '2010年报',
+      dataIndex: '2010',
+      width: '18%',
+      align: 'center'
+    },
+  ];
+  /*
+  const data = [{
+      key: 1,
+      title: '营业收入',
+      2019: 32,
+      2018: 32,
+      2017: 32,
+      2016: 32,
+      2015: 32,
+      2014: 1,
+      2013: 32,
+      2012: 32,
+      2011: 32,
+      2010: 32,
+    },
+    {
+      key: 2,
+      title: '营业收入同比增长',
+      2019: 32,
+      2018: 32,
+      2017: 32,
+      2016: 32,
+      2015: 32,
+      2014: 1,
+      2013: 32,
+      2012: 32,
+      2011: 32,
+      2010: 32,
+    },
+    {
+      key: 3,
+      name: 'Joe Black',
+      age: 32,
+      address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
+      tags: ['cool', 'teacher'],
+    },
+  ];
+  */
+  export default {
+    data() {
+      return {
+        page: 1,
+        columns1,
+        columns2,
+        data:[],
+        companyLink: 'https://xueqiu.com/S/SZ000069',
+        name: '华侨城A',
+        symbol: 'SZ000069',
+      }
+    },
+    created: function () {
+      this.getParams();
+    },
+    watch: {
+      // 监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
+      '$route': 'getParams'
+    },
+    mounted(){
+      this.getTable();
+    },
+    methods: {
+      getParams: function () {
+        var params = this.$route.query.params
+        this.companyLink = params.companyLink
+        this.name = params.name
+        this.symbol = params.symbol
+      },
+      getTable: function(){
+          this.$api.Detail.Finance({        
+            symbol: this.symbol      
+        }).then(res=> {
+            this.data = res.data.list;
+        })    
+      },
+    }
+  }
+</script>
+<style scoped>
+  html {
+    box-sizing: border-box;
+  }
+  
+
+  #components-layout-demo-top .logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 24px 16px 0;
+    float: left;
+  }
+
+  .stock-info-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    zoom: 1;
+    line-height: 1;
+    float: left;
+    padding-top: 5px;
+    padding-right: 1000px;
+  }
+
+  .stock-info-title .stock-info-name {
+    font-size: 20px;
+    color: #0055a2;
+    font-weight: 700;
+    float: left;
+  }
+
+  .stock-info-title .table-operate {
+    float: right;
+    line-height: 20px;
+    margin-bottom: 10px;
+  }
+
+  .stock-currency {
+    padding-top: 15px;
+    float: left;
+    line-height: 20px;
+  }
+
+</style>
