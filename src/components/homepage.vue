@@ -98,12 +98,7 @@
         mounted() {
             this.getStocks();
 
-            // const data = this.indices;
-            const data = [
-                {'dtime': '2020-01-02 9:00', 'value': 3245.8},
-                {'dtime': '2020-01-02 9:02', 'value': 3435.8},
-                {'dtime': '2020-01-02 9:04', 'value': 3012.3}
-            ];
+            const data = this.indices;
 
             const chart = new Chart({
                 container: 'container',
@@ -135,8 +130,9 @@
         },
         methods:{
             getStocks(){
-                this.$http.get('/getStocks/' + this.chosen_market).then(function (response) {
+                this.$api.MarketCenter.getAllData().then(function (response) {
                     let data = response.data;
+                    console.log(data);
                     if(data.state == true){
                         this.indices = data.indices;
                         this.stocks = data.stocks;
@@ -151,7 +147,7 @@
                 this.is_selection_visible = true;
             },
             confirmSelection(){
-                this.$http.get('/getStocksbyMarket', {params: this.market_index}).then(function (response) {
+                this.$api.Market.getMarketData({market_index: this.market_index}).then(function (response) {
                     let data = response.data;
                     if(data.state == true){
                         this.$router.push({

@@ -120,7 +120,7 @@
                 this.is_selection_visible = true;
             },
             confirmSelection(){
-                this.$http.get('/getStocksbyMarket', {params: this.market_index}).then(function (response) {
+                this.$api.MarketCenter.getMarketData({market_index: this.market_index}).then(function (response) {
                     let data = response.data;
                     if(data.state == true){
                         this.$router.push({
