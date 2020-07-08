@@ -17,7 +17,7 @@
                 <a-form :form="form" :style="{paddingRight: '100px'}">
                     <a-form-item v-bind="formItemLayout" label="用户名称">
                         <a-input
-                            v-decorator="['company',{rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }]}]"
+                            v-decorator="['username',{rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }]}]"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="登录密码" has-feedback>
@@ -110,7 +110,7 @@
             </a-menu-item>
             <a-sub-menu v-if="isLogin" :style="{float:'right'}">
                 <span slot="title" class="submenu-title-wrapper">
-                    <a-icon type="team" />{{name}}</span>
+                    <a-icon type="team" />{{username}}</span>
                 <a-menu-item key="info: modifyPwd" @click="modifyPassword">
                     修改密码
                 </a-menu-item>
@@ -181,18 +181,21 @@
                 this.user_modifyPwd_visible = true;
             },
             confirmLogin(){
+                let $this = this;
                 let param = new URLSearchParams();
                 param.append('email', this.input_email);
                 param.append('password', this.input_password);
-                this.$api.User.Login({param}).then(function (response) {
+                let email = this.input_email;
+                this.$api.User.Login(param).then(function (response) {
                     let data = response.data;
                     let state = data.state;
                     if (state == true) {
                         let username = data.username;
                         let token = data.token;
-                        VueCookies.set('username' , username, "1d");
+                        VueCookies.set('username', username, "1d");
                         VueCookies.set("token", token, "1d");
-                        VueCookies.set("email", this.input_email, "1d");
+                        VueCookies.set("email", email, "1d");
+                        $this.isLogin = true;
                         router.push("/");
                     }
                     else{
@@ -200,40 +203,44 @@
                     }
                 });
                 this.user_login_visible = false;
-                this.isLogin = true;
 
             },
             confirmRegister(){
                 this.form.validateFields((err, values) => {
-                    if (this.captcha == '' || values.captcha !== this.captcha) {
+                    if (this.captcha == '' || values.captcha != this.captcha) {
+                        console.log(this.captcha);
+                        console.log(values.captcha);
                         this.$error({
                             title: '错误',
                             content: '请输入正确的验证码！',
                         });
                         return;
                     }
-                    if (values.email !== '' || values.password == '' || values.password !== values.confirm) {
+                    if (values.email == '' || values.password == '' || values.password != values.confirm) {
                         this.$error({
                             title: '错误',
                             content: '请输入邮箱和密码！',
                         })
                     }
                     else {
+                        let $this = this;
                         let param = new URLSearchParams();
+                        let username = values.username;
+                        let email = values.email;
                         param.append('email', values.email);
                         param.append('password', values.password);
                         param.append('username', values.username);
-                        this.$api.User.Register({param}).then(function (response) {
+                        this.$api.User.Register(param).then(function (response) {
                             let data = response.data;
                             let state = data.state;
                             if (state == true) {
                                 let token = data.token;
-                                VueCookies.set('username' , values.username, "1d");
+                                VueCookies.set('username' , username, "1d");
                                 VueCookies.set("token", token, "1d");
-                                VueCookies.set("email", values.email, "1d");
-                                this.isLogin = true;
-                                this.user_register_visible = false;
-                                this.user_login_visible = false;
+                                VueCookies.set("email", email, "1d");
+                                $this.isLogin = true;
+                                $this.user_register_visible = false;
+                                $this.user_login_visible = false;
                                 router.push("/");
                             }
                             else{
@@ -247,35 +254,36 @@
             //暂时支持
             confirmModify(){
                 this.form.validateFields((err, values) => {
-                    if (this.captcha == '' || values.captcha !== this.captcha) {
+                    if (this.captcha == '' || values.captcha != this.captcha) {
                         this.$error({
                             title: '错误',
                             content: '请输入正确的验证码！',
                         });
                         return;
                     }
-                    if (values.email == '' || values.password == '' || values.password !== values.confirm) {
+                    if (values.email == '' || values.password == '' || values.password != values.confirm) {
                         this.$error({
                             title: '错误',
                             content: '请输入邮箱和密码！',
                         })
                     }
                     else {
+                        let $this = this;
                         let param = new URLSearchParams();
                         param.append('email', values.email);
                         param.append('password', values.password);
-                        this.$api.User.Modify({param}).then(function (response) {
+                        this.$api.User.Modify(param).then(function (response) {
                             let data = response.data;
                             let state = data.state;
                             if (state == true) {
-                                this.user_modifyPwd_visible = false;
-                                this.isLogin = false;
+                                $this.user_modifyPwd_visible = false;
+                                $this.isLogin = false;
                                 VueCookies.remove('email', 'username', 'token');
-                                this.$success({
+                                $this.$success({
                                     title: '成功',
                                     content: '修改密码成功！',
                                 });
-                                this.user_login_visible = true;
+                                $this.user_login_visible = true;
                                 router.push("/");
                             }
                             else{
@@ -305,24 +313,26 @@
                 callback();
             },
             getCaptcha(){
+                let $this = this;
                 this.form.validateFields((err, values) => {
                     let param = new URLSearchParams();
                     param.append('email', values.email);
-                    this.$api.User.Captcha({param}).then(function (response) {
+                    this.$api.User.Captcha(param).then(function (response) {
                         let data = response.data;
                         let state = data.state;
                         if (state == true) {
-                            this.captcha = data.captcha;
+                            $this.captcha = data.captcha;
                         }
                     });
                 });
             },
             quitLogin(){
+                let $this = this;
                 this.$confirm({
                     content: '您确定要退出当前登录吗？',
                     onOk() {
                         VueCookies.remove('email', 'username', 'token');
-                        this.isLogin = false;
+                        $this.isLogin = false;
                         router.push("/");
                     },
                     onCancel() {},
@@ -333,7 +343,7 @@
                 let param = new URLSearchParams();
                 param.append('token', token);
                 param.append('ts_code', value)
-                this.$api.Detail.BasicData({param}).then(function (response) {
+                this.$api.Detail.BasicData(param).then(function (response) {
                     let data = response.data;
                     if(data.state == true){
                         this.$router.push({
