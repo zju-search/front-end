@@ -14,6 +14,11 @@ const Detail = {
             params: params
         })
     },
+    BasicData (params) {
+        return axios.post(`${base.mc}/api/getStockDetail`,{
+            params: params,
+        })
+    }
 }
 
 export default Detail

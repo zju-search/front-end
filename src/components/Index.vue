@@ -4,10 +4,10 @@
             <label>邮箱：</label>
             <a-input
                 v-model="input_email"
-                v-decorator="['email',{rules: [{type: 'email', message: 'The input is not valid E-mail!',}, {required: true, message: 'Please input your E-mail!',},],},]"
+                v-decorator="['email',{rules: [{type: 'email', message: 'The input is not valid E-mail!',}, {required: true, message: 'Please input your E-mail!'}]}]"
             />
             <label>密码：</label>
-            <a-input type="password" v-model="input_password" v-decorator="['password', { rules: [{ required: true, message: '请输入用户密码' }] }]"/>
+            <a-input type="password" v-model="input_password" v-decorator="['password', { rules: [{ required: true, message: '请输入用户密码' }]}]"/>
             <a @click="modifyPassword" :style="{float: 'right'}">忘记密码</a>
             <br /><br />
             <a @click="userRegister"><u>点击注册</u></a>
@@ -15,27 +15,27 @@
         <a-modal v-model="user_register_visible" title="| 用户注册" @ok="confirmRegister" ok-text="注册" cancel-text="取消" width="600px">
             <div>
                 <a-form :form="form" :style="{paddingRight: '100px'}">
-                    <a-form-item v-bind="formItemLayout" label="单位名称">
+                    <a-form-item v-bind="formItemLayout" label="用户名称">
                         <a-input
-                            v-decorator="['company',{rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],},]"
+                            v-decorator="['company',{rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }]}]"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="登录密码" has-feedback>
                         <a-input
                             type="password"
-                            v-decorator="[ 'password', {rules: [{required: true, message: 'Please input your password!',},{validator: validateToNextPassword,},],},]"
+                            v-decorator="[ 'password', {rules: [{required: true, message: 'Please input your password!',},{validator: validateToNextPassword}]}]"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="重复密码" has-feedback>
                         <a-input
                             type="password"
-                            v-decorator="['confirm', {rules: [{required: true, message: 'Please confirm your password!',}, {validator: compareToFirstPassword,},],},]"
+                            v-decorator="['confirm', {rules: [{required: true, message: 'Please confirm your password!',}, {validator: compareToFirstPassword}]}]"
                             @blur="handleConfirmBlur"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="单位邮箱">
                         <a-input
-                            v-decorator="['email', {rules: [{type: 'email', message: 'The input is not valid E-mail!',},{required: true, message: 'Please input your E-mail!',},],},]"
+                            v-decorator="['email', {rules: [{type: 'email', message: 'The input is not valid E-mail!',},{required: true, message: 'Please input your E-mail!'}]}]"
                         />
                     </a-form-item>
                     <a-form-item
@@ -45,7 +45,7 @@
                         <a-row :gutter="8">
                             <a-col :span="12">
                                 <a-input
-                                    v-decorator="['captcha',{ rules: [{ required: true, message: '输入验证码有误！' }] },]"
+                                    v-decorator="['captcha',{ rules: [{ required: true, message: '输入验证码有误！' }]}]"
                                 />
                             </a-col>
                             <a-col :span="12">
@@ -62,19 +62,19 @@
                     <a-form-item v-bind="formItemLayout" label="新密码" has-feedback>
                         <a-input
                             type="password"
-                            v-decorator="['password',{rules: [{required: true, message: 'Please input your password!',},{validator: validateToNextPassword,},],},]"
+                            v-decorator="['password',{rules: [{required: true, message: 'Please input your password!'},{validator: validateToNextPassword}]}]"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="重复密码" has-feedback>
                         <a-input
                             type="password"
-                            v-decorator="['confirm',{rules: [{required: true,message: 'Please confirm your password!',},{validator: compareToFirstPassword,},],},]"
+                            v-decorator="['confirm',{rules: [{required: true,message: 'Please confirm your password!'},{validator: compareToFirstPassword}]}]"
                             @blur="handleConfirmBlur"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="单位邮箱">
                         <a-input
-                            v-decorator="['email',{rules: [{type: 'email',message: 'The input is not valid E-mail!',},{required: true,message: 'Please input your E-mail!',},],},]"
+                            v-decorator="['email',{rules: [{type: 'email',message: 'The input is not valid E-mail!',},{required: true,message: 'Please input your E-mail!'}]}]"
                         />
                     </a-form-item>
                     <a-form-item
@@ -84,7 +84,7 @@
                         <a-row :gutter="8">
                             <a-col :span="12">
                                 <a-input
-                                    v-decorator="['captcha',{ rules: [{ required: true, message: '输入验证码有误！'}]},]"
+                                    v-decorator="['captcha',{ rules: [{ required: true, message: '输入验证码有误！'}]}]"
                                 />
                             </a-col>
                             <a-col :span="12">
@@ -181,10 +181,10 @@
                 this.user_modifyPwd_visible = true;
             },
             confirmLogin(){
-                let formData = new FormData();
-                formData.append('email', this.input_email);
-                formData.append('password', this.input_password);
-                this.$http.post('/api/Login', formData).then(function (response) {
+                let param = new URLSearchParams();
+                param.append('email', this.input_email);
+                param.append('password', this.input_password);
+                this.$api.User.Login({param}).then(function (response) {
                     let data = response.data;
                     let state = data.state;
                     if (state == true) {
@@ -219,11 +219,11 @@
                         })
                     }
                     else {
-                        let formData = new FormData();
-                        formData.append('email', values.email);
-                        formData.append('password', values.password);
-                        formData.append('username', values.username);
-                        this.$http.post('/api/Register', formData).then(function (response) {
+                        let param = new URLSearchParams();
+                        param.append('email', values.email);
+                        param.append('password', values.password);
+                        param.append('username', values.username);
+                        this.$api.User.Register({param}).then(function (response) {
                             let data = response.data;
                             let state = data.state;
                             if (state == true) {
@@ -261,10 +261,10 @@
                         })
                     }
                     else {
-                        let formData = new FormData();
-                        formData.append('email', values.email);
-                        formData.append('password', values.password);
-                        this.$http.post('/api/modifyPwd', formData).then(function (response) {
+                        let param = new URLSearchParams();
+                        param.append('email', values.email);
+                        param.append('password', values.password);
+                        this.$api.User.Modify({param}).then(function (response) {
                             let data = response.data;
                             let state = data.state;
                             if (state == true) {
@@ -306,9 +306,9 @@
             },
             getCaptcha(){
                 this.form.validateFields((err, values) => {
-                    let formData = new FormData();
-                    formData.append('email', values.email);
-                    this.$http.post('/api/sendEmail', formData).then(function (response) {
+                    let param = new URLSearchParams();
+                    param.append('email', values.email);
+                    this.$api.User.Captcha({param}).then(function (response) {
                         let data = response.data;
                         let state = data.state;
                         if (state == true) {
@@ -330,9 +330,10 @@
             },
             startSearch(value){
                 let token = VueCookies.get('token');
-                let formData = new FormData();
-                formData.append('token', token);
-                this.$http.post('/getStocksbyMarket', {params: value, formData}).then(function (response) {
+                let param = new URLSearchParams();
+                param.append('token', token);
+                param.append('ts_code', value)
+                this.$api.Detail.BasicData({param}).then(function (response) {
                     let data = response.data;
                     if(data.state == true){
                         this.$router.push({
