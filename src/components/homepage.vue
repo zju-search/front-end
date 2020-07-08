@@ -130,13 +130,15 @@
         },
         methods:{
             getStocks(){
-                this.$api.MarketCenter.getAllData().then(function (response) {
+                let $this = this;
+                let param = new URLSearchParams();
+                this.$api.MarketCenter.getAllData(param).then(function (response) {
                     let data = response.data;
                     console.log(data);
                     if(data.state == true){
-                        this.indices = data.indices;
-                        this.stocks = data.stocks;
-                        this.markets = data.markets;
+                        $this.indices = data.indices;
+                        $this.stocks = data.stocks;
+                        $this.markets = data.markets;
                     }
                     else{
                         alert("数据加载错误！");
@@ -147,12 +149,14 @@
                 this.is_selection_visible = true;
             },
             confirmSelection(){
-                this.$api.Market.getMarketData({market_index: this.market_index}).then(function (response) {
+                let $this = this;
+                let param = new URLSearchParams();
+                param.append('market_index', this.market_index);
+                this.$api.Market.getMarketData(param).then(function (response) {
                     let data = response.data;
                     if(data.state == true){
-                        this.$router.push({
-                            path: 'MarketStocks' + this.market_index,
-                            name: 'MarketStocks',
+                        $this.$router.push({
+                            path: '/MarketStocks' + this.market_index,
                             params:{
                                 stocks: data.stocks,
                                 markets: this.markets
