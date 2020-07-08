@@ -96,7 +96,7 @@
             // this.stock_details =data.stocks;
             // this.introduction = data.introduction;
             // this.main_business = data.main_business;
-            // this.ts_code = this.stock_details.symbol;
+
             this.stock_details = {'name': '热推的', 'symbol': 'SZ300001', 'current_price': 24.12,
                 'close': 22.82, 'open': 23.29, 'high': 24.53, 'low': 23.20, 'change': 1.29, 'pct_chg': 0.052,
                 'vol': 23.88, 'amount': 5.72, 'pe_ttm': 148.9, 'pe': 88.83, 'circ_mv': 226.15, 'total_mv': 240.51,
@@ -109,13 +109,15 @@
                 "5kV智能箱式变电站、10kV智能欧式箱变、铁路(客专)电力远动箱变、智能环网柜、智能开闭站、智能充电箱变、" +
                 "智能微网箱变、智能一体化光伏箱变、智能一体化风电箱变、GIS、H-GIS、变压器、开关柜、交直流电源屏、计量屏、一体化母线桥等。";
             this.main_business = "研发、生产和销售以户外箱式电力设备为主、户内开关柜为辅的成套变配电产品";
+            this.ts_code = this.stock_details.symbol;
         },
         methods:{
             toIntroduction(){
+                console.log(this.ts_code);
                 this.$router.push({
-                    path: '/GSJJ',
+                    path: `/StockDetail/${this.ts_code}/GSJJ`,
                     name: '公司简介',
-                    params:{
+                    query:{
                         name: this.stock_details.name,
                         symbol: this.ts_code,
                         companyLink: window.location.href
@@ -124,9 +126,9 @@
             },
             toFinancialData(){
                 this.$router.push({
-                    path: '/CWZB',
+                    path: `/StockDetail/${this.ts_code}/CWZB`,
                     name: '财务指标',
-                    params:{
+                    query:{
                         name: this.stock_details.name,
                         symbol: this.ts_code,
                         companyLink: window.location.href

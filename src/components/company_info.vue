@@ -77,7 +77,7 @@
       }
     },
     created: function () {
-      //this.getParams();
+      this.getParams();
       
     },
     watch: {
@@ -89,10 +89,10 @@
     },
     methods: {
       getParams: function () {
-        var params = this.$route.query.params
-        this.companyLink = params.companyLink
-        this.name = params.name
-        this.symbol = params.symbol
+        var params = this.$route.query;
+        this.companyLink = params.companyLink;
+        this.name = params.name;
+        this.symbol = params.symbol;
       },
       getTable: function(){
           this.$api.Detail.Info({        
