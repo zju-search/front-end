@@ -116,7 +116,6 @@
                 console.log(this.ts_code);
                 this.$router.push({
                     path: `/StockDetail/${this.ts_code}/GSJJ`,
-                    name: '公司简介',
                     query:{
                         name: this.stock_details.name,
                         symbol: this.ts_code,
@@ -127,7 +126,6 @@
             toFinancialData(){
                 this.$router.push({
                     path: `/StockDetail/${this.ts_code}/CWZB`,
-                    name: '财务指标',
                     query:{
                         name: this.stock_details.name,
                         symbol: this.ts_code,
