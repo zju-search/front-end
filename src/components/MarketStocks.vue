@@ -50,10 +50,10 @@
                 loading: false,
                 is_selection_visible: false,
                 chosen_market: null,
+                market_index: null,
             }
         },
         mounted() {
-            console.log(typeof this.$route.query.stocks[0]);
             if(typeof this.$route.query.stocks[0] == "string"){
                 this.markets = JSON.parse(localStorage.getItem('markets'));
                 this.stocks = JSON.parse(localStorage.getItem('stocks'));
@@ -128,15 +128,17 @@
                 this.is_selection_visible = true;
             },
             confirmSelection(){
-                this.$api.MarketCenter.getMarketData({market_index: this.market_index}).then(function (response) {
+                let $this = this;
+                let param = new URLSearchParams();
+                param.append('market_index', this.chosen_market);
+                this.$api.Market.getMarketData(param).then(function (response) {
                     let data = response.data;
                     if(data.state == true){
-                        this.$router.push({
-                            path: 'MarketStocks' + this.market_index,
-                            name: 'MarketStocks',
-                            params:{
+                        $this.$router.push({
+                            path: 'MarketStocks/' + $this.chosen_market,
+                            query:{
                                 stocks: data.stocks,
-                                markets: this.markets
+                                markets: $this.markets
                             }
                         });
                     }

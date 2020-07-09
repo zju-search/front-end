@@ -147,7 +147,6 @@
         this.companyLink = params.companyLink;
         this.name = params.name;
         this.symbol = params.symbol;
-        console.log(name);
       },
       getTable: function () {
         let param = new URLSearchParams();

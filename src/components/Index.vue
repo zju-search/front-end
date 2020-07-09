@@ -208,8 +208,6 @@
             confirmRegister(){
                 this.form.validateFields((err, values) => {
                     if (this.captcha == '' || values.captcha != this.captcha) {
-                        console.log(this.captcha);
-                        console.log(values.captcha);
                         this.$error({
                             title: '错误',
                             content: '请输入正确的验证码！',
@@ -345,9 +343,7 @@
                 param.append('token', token);
                 param.append('ts_code', value);
                 this.$api.Detail.BasicData(param).then(function (response) {
-                    console.log(response);
                     let data = response.data;
-                    console.log(data);
                     if(data.state == true){
                         $this.$router.push({
                             path: `/StockDetail/ + ${data.stocks.symbol}`,
