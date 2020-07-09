@@ -1,19 +1,5 @@
 <template>
   <a-layout id="components-layout-demo-top" class="layout">
-    <a-layout-header >
-      <div class="logo" />
-      <a-menu theme="dark" mode="horizontal" :default-selected-keys="['2']" :style="{ lineHeight: '64px' }">
-        <a-menu-item key="1">
-          nav 1
-        </a-menu-item>
-        <a-menu-item key="2">
-          nav 2
-        </a-menu-item>
-        <a-menu-item key="3">
-          nav 3
-        </a-menu-item>
-      </a-menu>
-    </a-layout-header>
     <a-layout-content style="padding: 0 50px">
       <a-breadcrumb style="margin: 16px 0">
       </a-breadcrumb>
@@ -51,9 +37,6 @@
         </div>
       </div>
     </a-layout-content>
-    <a-layout-footer style="text-align: center">
-      Ant Design ©2018 Created by Ant UED
-    </a-layout-footer>
   </a-layout>
 
 
@@ -135,44 +118,7 @@
       align: 'center'
     },
   ];
-  /*
-  const data = [{
-      key: 1,
-      title: '营业收入',
-      2019: 32,
-      2018: 32,
-      2017: 32,
-      2016: 32,
-      2015: 32,
-      2014: 1,
-      2013: 32,
-      2012: 32,
-      2011: 32,
-      2010: 32,
-    },
-    {
-      key: 2,
-      title: '营业收入同比增长',
-      2019: 32,
-      2018: 32,
-      2017: 32,
-      2016: 32,
-      2015: 32,
-      2014: 1,
-      2013: 32,
-      2012: 32,
-      2011: 32,
-      2010: 32,
-    },
-    {
-      key: 3,
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
-  */
+  
   export default {
     data() {
       return {
