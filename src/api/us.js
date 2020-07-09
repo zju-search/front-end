@@ -1,18 +1,18 @@
-// import base from './base'
+import base from './base'
 import axios from '@/utils/http'
 
 const User = {
     Login(params) {
-        return axios.post('/postapi/Login', params)
+        return axios.post(`${base.us}/Login`, params)
     },
     Register(params) {
-        return axios.post('/postapi/Register', params)
+        return axios.post(`${base.us}/Register`, params)
     },
     Modify(params) {
-        return axios.post('/postapi/modifyPwd', params)
+        return axios.post(`${base.us}/modifyPwd`, params)
     },
     Captcha(params) {
-        return axios.post('/postapi/getCaptcha', params)
+        return axios.post(`${base.us}/getCaptcha`, params)
     }
 }
 
