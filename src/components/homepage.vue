@@ -29,9 +29,9 @@
             >
                 <div class="font"><b>市场一览</b></div>
                 <div :style="{color: '#4682B4'}"><b>沪深300</b></div>
-                <div :style="{color: '#DC143C', float: 'left', marginRight: '10px'}"><b>{{indices.slice(-1)}}</b></div>
-<!--                <div :style="{color: '#DC143C', float: 'left'}">324</div>-->
-                <div id="container" :style="{border: '1px solid #D3D3D3', margin: '30px 0', minHeight: '200px'}"></div>
+<!--                <div :style="{color: '#DC143C', float: 'left', marginRight: '10px'}"><b>{{indices.slice(-1)}}</b></div>-->
+<!--&lt;!&ndash;                <div :style="{color: '#DC143C', float: 'left'}">324</div>&ndash;&gt;-->
+<!--                <div id="container" :style="{border: '1px solid #D3D3D3', margin: '30px 0', minHeight: '200px'}"></div>-->
                 <div class="font"><b>股票一览</b></div>
                 <a-table
                         :columns="columns"
@@ -57,11 +57,11 @@
         },
         {
             title: '股票代码',
-            dataIndex: 'ts_code',
+            dataIndex: 'tsCode',
         },
         {
             title: '当前价',
-            dataIndex: 'current_price',
+            dataIndex: 'currentPrice',
         },
         {
             title: '昨日收盘价',
@@ -73,7 +73,7 @@
         },
         {
             title: '涨幅百分比',
-            dataIndex: 'pct_chg',
+            dataIndex: 'pctChg',
         },
         {
             title: '成交额',
@@ -156,10 +156,10 @@
                     let data = response.data;
                     if(data.state == true){
                         $this.$router.push({
-                            path: '/MarketStocks' + this.market_index,
+                            path: '/MarketStocks/' + $this.market_index,
                             query:{
                                 stocks: data.stocks,
-                                markets: this.markets
+                                markets: $this.markets
                             }
                         });
                     }

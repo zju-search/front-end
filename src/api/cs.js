@@ -1,9 +1,9 @@
-// import base from './base'
+import base from './base'
 import axios from '@/utils/http'
 
 const Market = {
     getMarketData(params) {
-        return axios.post('/postapi/getStocksbyMarket', params)
+        return axios.post(`${base.cs}/getStocksbyMarket`, params)
     }
 }
 

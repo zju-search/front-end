@@ -97,11 +97,11 @@
         </a-modal>
 
         <a-menu mode="horizontal" :style="{backgroundColor: '#4682B4', color:'#ffffff'}">
-            <a-menu-item>
+            <a-menu-item @click="$router.push('/')">
                 <a-icon type="mail"/>
                 首页
             </a-menu-item>
-            <a-menu-item>
+            <a-menu-item @click="$router.push('/screener')">
                 <a-icon type="appstore"/>
                 筛选器
             </a-menu-item>

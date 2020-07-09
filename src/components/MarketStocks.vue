@@ -28,12 +28,8 @@
                     :style="{ background: '#fff', padding: '24px', margin: '24px 16px 0', minHeight: '280px' }"
             >
                 <div class="font"><b>股票一览</b></div>
-                <a-table
-                        :columns="columns"
-                        :data-source="stocks"
-                        :loading="loading"
-                        size="middle"
-                >
+                <a-table :columns="columns" :data-source="stocks" :loading="loading" size="middle">
+                    <a slot="tsCode" slot-scope="tsCode" @click="handleClick(tsCode)">{{tsCode}}</a>
                 </a-table>
             </a-layout-content>
         </a-layout>
@@ -41,6 +37,8 @@
 </template>
 
 <script>
+    import VueCookies from "vue-cookies";
+
     export default {
         name: "homepage",
         data(){
@@ -55,9 +53,17 @@
             }
         },
         mounted() {
-            this.stocks = this.$route.query.stocks;
-            this.markets = this.$route.query.markets;
-            console.log('1111');
+            console.log(typeof this.$route.query.stocks[0]);
+            if(typeof this.$route.query.stocks[0] == "string"){
+                this.markets = JSON.parse(localStorage.getItem('markets'));
+                this.stocks = JSON.parse(localStorage.getItem('stocks'));
+            }
+            else{
+                this.stocks = this.$route.query.stocks;
+                this.markets = this.$route.query.markets;
+                localStorage.setItem('stocks', JSON.stringify(this.stocks));
+                localStorage.setItem('markets', JSON.stringify(this.markets));
+            }
         },
         computed:{
             columns() {
@@ -69,17 +75,19 @@
                     },
                     {
                         title: '股票代码',
-                        dataIndex: 'ts_code',
-                        key: 'ts_code',
-                        sorter: (a, b) => a.ts_code - b.ts_code,
+                        dataIndex: 'tsCode',
+                        key: 'tsCode',
+                        sorter: (a, b) => a.tsCode - b.tsCode,
                         sortDirections: ['ascend'],
+                        slots: {title: 'tsCode'},
+                        scopedSlots: { customRender: 'tsCode' },
                     },
                     {
                         title: '当前价',
-                        dataIndex: 'current_price',
-                        key: 'current_price',
+                        dataIndex: 'currentPrice',
+                        key: 'currentPrice',
                         defaultSortOrder: 'descend',
-                        sorter: (a, b) => a.current_price - b.current_price,
+                        sorter: (a, b) => a.currentPrice - b.currentPrice,
                         sortDirections: ['descend', 'ascend'],
                     },
                     {
@@ -99,9 +107,9 @@
                     },
                     {
                         title: '涨幅百分比',
-                        dataIndex: 'pct_chg',
-                        key: 'pct_chg',
-                        sorter: (a, b) => a.pct_chg - b.pct_chg,
+                        dataIndex: 'pctChg',
+                        key: 'pctChg',
+                        sorter: (a, b) => a.pctChg - b.pctChg,
                         sortDirections: ['descend', 'ascend'],
                     },
                     {
@@ -140,6 +148,27 @@
             handleSelectionChange(value){
                 this.chosen_market = value.key;
             },
+            handleClick(ts_code){
+                let $this = this;
+                let token = VueCookies.get('token');
+                let param = new URLSearchParams();
+                param.append('token', token);
+                param.append('ts_code', ts_code);
+                this.$api.Detail.BasicData(param).then(function (response) {
+                    let data = response.data;
+                    if(data.state == true){
+                        $this.$router.push({
+                            path: `/StockDetail/ + ${data.stocks.symbol}`,
+                            query:{
+                                data: data,
+                            }
+                        });
+                    }
+                    else{
+                        alert("未找到该股票！");
+                    }
+                })
+            }
         }
     }
 </script>

@@ -143,18 +143,20 @@
     },
     methods: {
       getParams: function () {
-        var params = this.$route.query.params
-        this.companyLink = params.companyLink
-        this.name = params.name
-        this.symbol = params.symbol
+        var params = this.$route.query;
+        this.companyLink = params.companyLink;
+        this.name = params.name;
+        this.symbol = params.symbol;
+        console.log(name);
       },
-      getTable: function(){
-          this.$api.Detail.Finance({        
-            symbol: this.symbol      
-        }).then(res=> {
-            this.data = res.data.list;
-        })    
-      },
+      getTable: function () {
+        let param = new URLSearchParams();
+        param.append('symbol', this.symbol);
+        this.$api.Detail.Finance(param).then(res => {
+          console.log(res);
+          this.data = res.data.financeIndexList;
+        })
+      }
     }
   }
 </script>

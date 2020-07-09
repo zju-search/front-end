@@ -64,10 +64,10 @@
         this.symbol = params.symbol;
       },
       getTable: function () {
-        this.$api.Detail.Info({
-          symbol: this.symbol
-        }).then(res => {
-          this.data = res.data.list;
+        let param = new URLSearchParams();
+        param.append('symbol', this.symbol);
+        this.$api.Detail.Info(param).then(res => {
+          this.data = res.data.companyInfoList;
         })
       }
     }
