@@ -29,8 +29,8 @@
             >
                 <div class="font"><b>市场一览</b></div>
                 <div :style="{color: '#4682B4'}"><b>沪深300</b></div>
-                <div :style="{color: '#DC143C', float: 'left', marginRight: '10px'}"><b>3246.8</b></div>
-                <div :style="{color: '#DC143C', float: 'left'}">324</div>
+                <div :style="{color: '#DC143C', float: 'left', marginRight: '10px'}"><b>{{indices.slice(-1)}}</b></div>
+<!--                <div :style="{color: '#DC143C', float: 'left'}">324</div>-->
                 <div id="container" :style="{border: '1px solid #D3D3D3', margin: '30px 0', minHeight: '200px'}"></div>
                 <div class="font"><b>股票一览</b></div>
                 <a-table
@@ -157,7 +157,7 @@
                     if(data.state == true){
                         $this.$router.push({
                             path: '/MarketStocks' + this.market_index,
-                            params:{
+                            query:{
                                 stocks: data.stocks,
                                 markets: this.markets
                             }

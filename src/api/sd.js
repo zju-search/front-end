@@ -5,12 +5,12 @@ import axios from '@/utils/http'
 const Detail = {
     //排行榜
     Info (params) {
-        return axios.get(`${base.mc}/CompanyInfo`,{
+        return axios.get(`${base.sd}/CompanyInfo`,{
             params: params
         })
     },
     Finance (params) {
-        return axios.get(`${base.mc}/financeIndex`,{
+        return axios.get(`${base.sd}/financeIndex`,{
             params: params
         })
     },
