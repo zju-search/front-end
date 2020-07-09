@@ -1,19 +1,5 @@
 <template>
   <a-layout id="components-layout-demo-top" class="layout">
-    <a-layout-header >
-      <div class="logo" />
-      <a-menu theme="dark" mode="horizontal" :default-selected-keys="['2']" :style="{ lineHeight: '64px' }">
-        <a-menu-item key="1">
-          nav 1
-        </a-menu-item>
-        <a-menu-item key="2">
-          nav 2
-        </a-menu-item>
-        <a-menu-item key="3">
-          nav 3
-        </a-menu-item>
-      </a-menu>
-    </a-layout-header>
     <a-layout-content style="padding: 0 50px">
       <a-breadcrumb style="margin: 16px 0">
       </a-breadcrumb>
@@ -22,20 +8,16 @@
           <a :href="companyLink" target="_blank" class="stock-info-name">{{name}}({{symbol}})</a>
         </div>
         <div>
-        <p></p>
+          <p></p>
         </div>
         <div class="tables">
-          <a-table v-if="page==1" :columns="columns" :data-source="data" bordered :showHeader=false :pagination=false>
+          <a-table v-if="page==1" :columns="columns" :data-source="data" bordered :showHeader='false'
+            :pagination='false'>
           </a-table>
         </div>
       </div>
     </a-layout-content>
-    <a-layout-footer style="text-align: center">
-      Ant Design ©2018 Created by Ant UED
-    </a-layout-footer>
   </a-layout>
-
-
 
 </template>
 
@@ -52,25 +34,12 @@
       align: 'center'
     },
   ];
-  /*
-  const data = [{
-      key: 1,
-      title: '公司名称',
-      info: '深圳华侨城股份有限公司'
-    },
-    {
-      key: 2,
-      title: '法人代表',
-      info: '段先念'
-    },
-  ];
-  */
   export default {
     data() {
       return {
         page: 1,
         columns,
-        data:[],
+        data: [],
         companyLink: 'https://xueqiu.com/S/SZ000069',
         name: '华侨城A',
         symbol: 'SZ000069',
@@ -78,14 +47,14 @@
     },
     created: function () {
       this.getParams();
-      
+
     },
     watch: {
       // 监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
       '$route': 'getParams'
     },
-    mounted(){
-        this.getTable();
+    mounted() {
+      this.getTable();
     },
     methods: {
       getParams: function () {
@@ -94,12 +63,12 @@
         this.name = params.name;
         this.symbol = params.symbol;
       },
-      getTable: function(){
-          this.$api.Detail.Info({        
-            symbol:this.symbol     
-        }).then(res=> {
-            this.data = res.data.list;
-        })    
+      getTable: function () {
+        this.$api.Detail.Info({
+          symbol: this.symbol
+        }).then(res => {
+          this.data = res.data.list;
+        })
       }
     }
   }
@@ -148,8 +117,7 @@
     line-height: 20px;
   }
 
-  .tables{
-      padding-top: 30px;
+  .tables {
+    padding-top: 30px;
   }
-  
 </style>
