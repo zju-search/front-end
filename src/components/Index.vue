@@ -343,8 +343,9 @@
                 let token = VueCookies.get('token');
                 let param = new URLSearchParams();
                 param.append('token', token);
-                param.append('ts_code', value)
+                param.append('ts_code', value);
                 this.$api.Detail.BasicData(param).then(function (response) {
+                    console.log(response);
                     let data = response.data;
                     console.log(data);
                     if(data.state == true){

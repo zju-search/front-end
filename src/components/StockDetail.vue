@@ -19,8 +19,10 @@
                 :style="{ background: '#fff', padding: '24px', minHeight: '280px' }"
         >
             <div class="font">{{stock_details.name}} ({{stock_details.symbol}})</div>
-            <div class="font" :style="{float: 'left'}">{{stock_details.current_price}}</div>
-            <div :style="{verticalAlign: 'bottom', marginTop: '20px'}">{{stock_details.change}}        {{stock_details.pct_chg}}</div>
+            <div class="font" v-if="flag" :style="{float: 'left', marginRight: '10px', color: 'red'}">￥{{stock_details.current_price}}</div>
+            <div class="font" v-else :style="{float: 'left', marginRight: '10px', color: 'green'}">￥{{stock_details.current_price}}</div>
+            <div v-if=flag :style="{verticalAlign: 'bottom', marginTop: '20px', color:'red'}">+{{parseFloat(stock_details.change).toFixed(3)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
+            <div v-else :style="{verticalAlign: 'bottom', marginTop: '20px', color:'green'}">+{{parseFloat(stock_details.change).toFixed(3)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
             <a-descriptions :column=4>
                 <a-descriptions-item label="最高">
                     {{stock_details.high}}
@@ -29,10 +31,10 @@
                     {{stock_details.open}}
                 </a-descriptions-item>
                 <a-descriptions-item label="市盈率(静)">
-                    {{stock_details.pe}}
+                    {{parseFloat(stock_details.pe).toFixed(2)}}
                 </a-descriptions-item>
                 <a-descriptions-item label="成交量">
-                    {{stock_details.vol}}
+                    {{parseFloat(stock_details.vol / 10000).toFixed(2)}} 万手
                 </a-descriptions-item>
                 <a-descriptions-item label="最低">
                     {{stock_details.low}}
@@ -41,31 +43,31 @@
                     {{stock_details.close}}
                 </a-descriptions-item>
                 <a-descriptions-item label="市盈率(TTM)">
-                    {{stock_details.pe_ttm}}
+                    {{parseFloat(stock_details.pe_ttm).toFixed(2)}}
                 </a-descriptions-item>
-                <a-descriptions-item label="成交量">
-                    {{stock_details.amount}}
+                <a-descriptions-item label="成交额">
+                    {{parseFloat(stock_details.amount / 100000).toFixed(2)}} 亿
                 </a-descriptions-item>
                 <a-descriptions-item label="总市值">
-                    {{stock_details.total_mv}}
+                    {{parseFloat(stock_details.total_mv / 100000).toFixed(2)}} 亿
                 </a-descriptions-item>
                 <a-descriptions-item label="股息(TTM)">
-                    {{stock_details.dv_ttm}}
+                    {{parseFloat(stock_details.dv_ttm).toFixed(2)}}
                 </a-descriptions-item>
                 <a-descriptions-item label="总股本">
-                    {{stock_details.total_share}}
+                    {{parseFloat(stock_details.total_share).toFixed(2)}} 万股
                 </a-descriptions-item>
                 <a-descriptions-item label="换手率">
                     {{stock_details.turnover_rate}}
                 </a-descriptions-item>
                 <a-descriptions-item label="流通市值">
-                    {{stock_details.circ_mv}}
+                    {{parseFloat(stock_details.circ_mv / 100000).toFixed(2)}} 亿
                 </a-descriptions-item>
                 <a-descriptions-item label="股息率(TTM)">
-                    {{stock_details.dv_ratio}}
+                    {{parseFloat(stock_details.dv_ratio).toFixed(2)}} %
                 </a-descriptions-item>
                 <a-descriptions-item label="流通股本">
-                    {{stock_details.float_share}}
+                    {{parseFloat(stock_details.float_share).toFixed(2)}} 万股
                 </a-descriptions-item>
             </a-descriptions>
         </a-layout-content>
@@ -89,6 +91,7 @@
                 introduction: "",
                 main_business: "",
                 ts_code: "",
+                flag: true
             }
         },
         mounted() {
@@ -101,10 +104,16 @@
                 localStorage.setItem('data', JSON.stringify(data));
             }
 
-            console.log(data);
             this.stock_details =data.stocks;
             this.introduction = data.introduction;
             this.main_business = data.main_business;
+
+            if(this.stock_details.change >= 0){
+                this.flag = true;
+            }
+            else{
+                this.flag = false;
+            }
 
             // this.stock_details = {'name': '热推的', 'symbol': 'SZ300001', 'current_price': 24.12,
             //     'close': 22.82, 'open': 23.29, 'high': 24.53, 'low': 23.20, 'change': 1.29, 'pct_chg': 0.052,
