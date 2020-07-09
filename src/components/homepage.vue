@@ -157,7 +157,7 @@
                     if(data.state == true){
                         $this.$router.push({
                             path: '/MarketStocks' + this.market_index,
-                            params:{
+                            query:{
                                 stocks: data.stocks,
                                 markets: this.markets
                             }

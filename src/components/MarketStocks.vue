@@ -55,8 +55,8 @@
             }
         },
         mounted() {
-            this.stocks = this.$route.params.stocks;
-            this.markets = this.$route.params.markets;
+            this.stocks = this.$route.query.stocks;
+            this.markets = this.$route.query.markets;
             console.log('1111');
         },
         computed:{

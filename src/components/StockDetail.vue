@@ -92,23 +92,32 @@
             }
         },
         mounted() {
-            // let data = this.$route.params.data;
-            // this.stock_details =data.stocks;
-            // this.introduction = data.introduction;
-            // this.main_business = data.main_business;
+            let data = null;
+            if (typeof this.$route.query.data == "string") {
+                data = JSON.parse(localStorage.getItem('data'));
+            }
+            else {
+                data = this.$route.query.data;
+                localStorage.setItem('data', JSON.stringify(data));
+            }
 
-            this.stock_details = {'name': '热推的', 'symbol': 'SZ300001', 'current_price': 24.12,
-                'close': 22.82, 'open': 23.29, 'high': 24.53, 'low': 23.20, 'change': 1.29, 'pct_chg': 0.052,
-                'vol': 23.88, 'amount': 5.72, 'pe_ttm': 148.9, 'pe': 88.83, 'circ_mv': 226.15, 'total_mv': 240.51,
-                'turnover_rate': 0.026, 'dv_ratio': 0.00008, 'dv_ttm': 0.02, 'total_share': 9.98, 'float_share': 9.4};
-            this.introduction = "青岛特锐德电气股份有限公司主营以" +
-                "户外箱式电力设备为主、户内开关柜为辅的" +
-                "成套变配电产品,致力于研发设计制造220kV及以下的变配" +
-                "电一二次产品并提供相关技术服务。公司在电气设备智能制造业务" +
-                "板块的主要产品有:220kV及以下模块化智能预制舱式变电站、移动式智能变电站、3" +
-                "5kV智能箱式变电站、10kV智能欧式箱变、铁路(客专)电力远动箱变、智能环网柜、智能开闭站、智能充电箱变、" +
-                "智能微网箱变、智能一体化光伏箱变、智能一体化风电箱变、GIS、H-GIS、变压器、开关柜、交直流电源屏、计量屏、一体化母线桥等。";
-            this.main_business = "研发、生产和销售以户外箱式电力设备为主、户内开关柜为辅的成套变配电产品";
+            console.log(data);
+            this.stock_details =data.stocks;
+            this.introduction = data.introduction;
+            this.main_business = data.main_business;
+
+            // this.stock_details = {'name': '热推的', 'symbol': 'SZ300001', 'current_price': 24.12,
+            //     'close': 22.82, 'open': 23.29, 'high': 24.53, 'low': 23.20, 'change': 1.29, 'pct_chg': 0.052,
+            //     'vol': 23.88, 'amount': 5.72, 'pe_ttm': 148.9, 'pe': 88.83, 'circ_mv': 226.15, 'total_mv': 240.51,
+            //     'turnover_rate': 0.026, 'dv_ratio': 0.00008, 'dv_ttm': 0.02, 'total_share': 9.98, 'float_share': 9.4};
+            // this.introduction = "青岛特锐德电气股份有限公司主营以" +
+            //     "户外箱式电力设备为主、户内开关柜为辅的" +
+            //     "成套变配电产品,致力于研发设计制造220kV及以下的变配" +
+            //     "电一二次产品并提供相关技术服务。公司在电气设备智能制造业务" +
+            //     "板块的主要产品有:220kV及以下模块化智能预制舱式变电站、移动式智能变电站、3" +
+            //     "5kV智能箱式变电站、10kV智能欧式箱变、铁路(客专)电力远动箱变、智能环网柜、智能开闭站、智能充电箱变、" +
+            //     "智能微网箱变、智能一体化光伏箱变、智能一体化风电箱变、GIS、H-GIS、变压器、开关柜、交直流电源屏、计量屏、一体化母线桥等。";
+            // this.main_business = "研发、生产和销售以户外箱式电力设备为主、户内开关柜为辅的成套变配电产品";
             this.ts_code = this.stock_details.symbol;
         },
         methods:{
