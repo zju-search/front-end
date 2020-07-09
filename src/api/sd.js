@@ -15,7 +15,7 @@ const Detail = {
         })
     },
     BasicData (params) {
-        return axios.post('/postapi/getStockDetail', params)
+        return axios.post(`${base.sd}/getStockDetail`, params)
     }
 }
 
