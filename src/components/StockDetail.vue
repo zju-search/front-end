@@ -21,8 +21,8 @@
             <div class="font">{{stock_details.name}} ({{stock_details.symbol}})</div>
             <div class="font" v-if="flag" :style="{float: 'left', marginRight: '10px', color: 'red'}">￥{{stock_details.current_price}}</div>
             <div class="font" v-else :style="{float: 'left', marginRight: '10px', color: 'green'}">￥{{stock_details.current_price}}</div>
-            <div v-if=flag :style="{verticalAlign: 'bottom', marginTop: '20px', color:'red'}">+{{parseFloat(stock_details.change).toFixed(3)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
-            <div v-else :style="{verticalAlign: 'bottom', marginTop: '20px', color:'green'}">+{{parseFloat(stock_details.change).toFixed(3)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
+            <div v-if=flag :style="{verticalAlign: 'bottom', marginTop: '20px', color:'red'}">+{{parseFloat(stock_details.change).toFixed(2)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
+            <div v-else :style="{verticalAlign: 'bottom', marginTop: '20px', color:'green'}">+{{parseFloat(stock_details.change).toFixed(2)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
             <a-descriptions :column=4>
                 <a-descriptions-item label="最高">
                     {{stock_details.high}}
@@ -131,7 +131,6 @@
         },
         methods:{
             toIntroduction(){
-                console.log(this.ts_code);
                 this.$router.push({
                     path: `/StockDetail/${this.ts_code}/GSJJ`,
                     query:{

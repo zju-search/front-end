@@ -29,10 +29,9 @@
             >
                 <div class="font"><b>市场一览</b></div>
                 <div :style="{color: '#4682B4'}"><b>沪深300</b></div>
-                <div :style="{color: '#DC143C', float: 'left', marginRight: '10px'}"><b>{{indices.slice(-1)}}</b></div>
-<!--                <div :style="{color: '#DC143C', float: 'left'}">324</div>-->
-                <div id="container" :style="{border: '1px solid #D3D3D3', margin: '30px 0', minHeight: '200px'}"></div>
-                <div class="font"><b>股票一览</b></div>
+                <div :style="{float: 'left', marginRight: '10px', fontSize: 'xx-large'}"><b>￥{{indices[indices.length - 1].price}}</b></div>
+                <div id="container" :style="{border: '1px solid #D3D3D3', marginTop: '50px', minHeight: '200px'}"></div>
+                <div class="font" :style="{marginTop:'10px'}"><b>股票一览</b></div>
                 <a-table
                         :columns="columns"
                         :data-source="stocks"
@@ -57,11 +56,11 @@
         },
         {
             title: '股票代码',
-            dataIndex: 'ts_code',
+            dataIndex: 'tsCode',
         },
         {
             title: '当前价',
-            dataIndex: 'current_price',
+            dataIndex: 'currentPrice',
         },
         {
             title: '昨日收盘价',
@@ -73,7 +72,7 @@
         },
         {
             title: '涨幅百分比',
-            dataIndex: 'pct_chg',
+            dataIndex: 'pctChg',
         },
         {
             title: '成交额',
@@ -123,8 +122,8 @@
                 shared: true,
             });
 
-            chart.line().position('dtime*value').label('value');
-            chart.point().position('dtime*value');
+            chart.line().position('dtime*price').label('price');
+            chart.point().position('dtime*price');
 
             chart.render();
         },
@@ -134,9 +133,9 @@
                 let param = new URLSearchParams();
                 this.$api.MarketCenter.getAllData(param).then(function (response) {
                     let data = response.data;
-                    console.log(data);
                     if(data.state == true){
                         $this.indices = data.indices;
+                        console.log(data.indices);
                         $this.stocks = data.stocks;
                         $this.markets = data.markets;
                     }
@@ -156,10 +155,10 @@
                     let data = response.data;
                     if(data.state == true){
                         $this.$router.push({
-                            path: '/MarketStocks' + this.market_index,
+                            path: '/MarketStocks/' + $this.market_index,
                             query:{
                                 stocks: data.stocks,
-                                markets: this.markets
+                                markets: $this.markets
                             }
                         });
                     }
@@ -176,6 +175,10 @@
 </script>
 
 <style scoped>
-
+    .font{
+        font-size: large;
+        vertical-align: bottom;
+        border-bottom: thin solid black;
+    }
 
 </style>
