@@ -29,9 +29,9 @@
             >
                 <div class="font"><b>市场一览</b></div>
                 <div :style="{color: '#4682B4'}"><b>沪深300</b></div>
-                <div :style="{float: 'left', marginRight: '10px', fontSize: 'xx-large'}"><b>￥{{indices[indices.length - 1].price}}</b></div>
-                <div id="container" :style="{border: '1px solid #D3D3D3', marginTop: '50px', minHeight: '200px'}"></div>
-                <div class="font" :style="{marginTop:'10px'}"><b>股票一览</b></div>
+                <div :style="{fontSize: 'xx-large'}"><b>￥{{parseFloat(indices[indices.length - 1].price).toFixed(2)}}</b></div>
+                <div id="container" :style="{marginTop: '20px'}"></div>
+                <div class="font" :style="{marginTop:'40px'}"><b>股票一览</b></div>
                 <a-table
                         :columns="columns"
                         :data-source="stocks"
@@ -96,23 +96,25 @@
         },
         mounted() {
             this.getStocks();
-
+        },
+        updated() {
             const data = this.indices;
 
             const chart = new Chart({
                 container: 'container',
-                autoFit: true,
-                height: 200,
-                padding: [40, 40, 40, 40],
+                // autoFit: true,
+                width: 550,
+                height: 300,
             });
 
             chart.data(data);
             chart.scale({
-                year: {
+                dtime: {
                     range: [0, 1],
                 },
-                value: {
-                    min: 0,
+                price: {
+                    min: 4740,
+                    max: 4830,
                     nice: true,
                 },
             });
@@ -122,7 +124,7 @@
                 shared: true,
             });
 
-            chart.line().position('dtime*price').label('price');
+            chart.line().position('dtime*price');
             chart.point().position('dtime*price');
 
             chart.render();
@@ -135,7 +137,6 @@
                     let data = response.data;
                     if(data.state == true){
                         $this.indices = data.indices;
-                        console.log(data.indices);
                         $this.stocks = data.stocks;
                         $this.markets = data.markets;
                     }
