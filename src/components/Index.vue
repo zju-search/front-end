@@ -105,7 +105,7 @@
                 <a-icon type="appstore"/>
                 筛选器
             </a-menu-item>
-            <a-menu-item @click="$router.push('/screener')">
+            <a-menu-item @click="$router.push('/searchNews')">
                 <a-icon type="reconciliation" />
                 新闻中心
             </a-menu-item>

@@ -2,7 +2,7 @@
     <a-layout id="components-layout-demo-top" class="layout">
         <a-layout-header>
             <div style="position: absolute;left: 48%; transform: translate(-50%, 0);">
-                <a-select label-in-value style=";width: 90px;" @change="onChange" :default-value="{ key: 'title' }">
+                <a-select label-in-value style="width: 90px;" @change="onChange" :default-value="{ key: 'title' }">
                     <a-select-option v-for="item in Options" :key="item.value" :value="item.value">
                         {{item.label}}
                     </a-select-option>
@@ -49,13 +49,14 @@
         },
         methods: {
             onChange(val) {
-                this.option = val
+                this.option = val.key
             },
             onSearch(value) {
                 console.log(value)
                 let param = new URLSearchParams();
                 param.append('param', this.option);
                 param.append('query', value)
+                console.log(this.option, value)
                 this.$api.News.Newsin(param).then(res => {
                     console.log(res.data)
                     this.Detail = []
