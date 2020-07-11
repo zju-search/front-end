@@ -55,7 +55,7 @@
                     </div>
                     <div class="stocktables">
                         <a-table :columns="stockColumns" :data-source="stockData" :pagination='true'
-                            :scroll="{x:stockColumns.length*130, y:300}">
+                            :scroll="{x:stockColumns.length*130, y:1000}">
                             <a :href=record.companyLink target="_blank" slot="name"
                                 slot-scope="text, record">{{record.name}}({{record.symbol}})</a>
                         </a-table>
@@ -897,7 +897,31 @@
                     range: [],
                 },
                 numberOfStock: 0,
-                stockColumns: [],
+                stockColumns : [{
+                    title: '股票',
+                    dataIndex: 'name',
+                    width: '20%',
+                    align: 'center',
+                    scopedSlots: {
+                        customRender: 'name'
+                    },
+                    defaultSortOrder: 'descend',
+                    sorter: (a, b) => a.name.length - b.name.length,
+                },
+                {
+                    title: '当前价',
+                    dataIndex: 'close',
+                    align: 'center',
+                    defaultSortOrder: 'descend',
+                    sorter: (a, b) => a.close - b.close,
+                },
+                {
+                    title: '当日涨跌幅(%)',
+                    dataIndex: 'pct_chg',
+                    align: 'center',
+                    defaultSortOrder: 'descend',
+                    sorter: (a, b) => a.pct_chg - b.pct_chg,
+                }],
                 stockData: [],
             }
         },
@@ -1027,64 +1051,16 @@
                 }
             },
             startScreen() {
-                this.stockColumns = []
-                this.stockColumns.push({
-                    title: '股票',
-                    dataIndex: 'name',
-                    width: '15%',
-                    align: 'center',
-                    scopedSlots: {
-                        customRender: 'name'
-                    },
-                    defaultSortOrder: 'descend',
-                    sorter: (a, b) => a.name.length - b.name.length,
-                });
-                this.stockColumns.push({
-                    title: '当前价',
-                    dataIndex: 'close',
-                    align: 'center',
-                    defaultSortOrder: 'descend',
-                    sorter: (a, b) => a.close - b.close,
-                });
-                this.stockColumns.push({
-                    title: '当日涨跌幅',
-                    dataIndex: 'pct_chg',
-                    align: 'center',
-                    defaultSortOrder: 'descend',
-                    sorter: (a, b) => a.pct_chg - b.pct_chg,
-                });
-                var willAddColumn = {
-                    title: '',
-                    dataIndex: '',
-                    align: 'center',
-                    sorter: '',
-                }
-                var i
-                for (i in this.conditionData) {
-                    willAddColumn.title = this.conditionData[i].condition
-                    willAddColumn.dataIndex = this.conditionData[i].type
-                    willAddColumn.sorter = (a, b) => a[willAddColumn.dataIndex] - b[willAddColumn.dataIndex]
-                    this.stockColumns.push(willAddColumn)
-                    willAddColumn = {
-                        title: '',
-                        dataIndex: '',
-                        align: 'center',
-                    }
-                }
                 this.getStock()
             },
             getStock() {
                 let $this = this
                 let param = new URLSearchParams();
-                console.log(JSON.stringify($this.conditionData))
-                console.log($this.industry)
-                console.log($this.area)
                 param.append('conditionList', JSON.stringify($this.conditionData));
                 param.append('industry', $this.industry);
                 param.append('area', $this.area);
                     $this.$api.Filter.Screen(param).then(res => {
-                    console.log(res)
-                    console.log(res.data.stockList)
+                    
                     $this.stockData = res.data.stockList
                     $this.numberOfStock = $this.stockData.length
                     var i
@@ -1127,7 +1103,7 @@
         float: left
     }
 
-    . .Rangeselect {
+    .Rangeselect {
         float: center
     }
 

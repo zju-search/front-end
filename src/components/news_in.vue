@@ -59,7 +59,7 @@
                 this.$api.News.Newsin(param).then(res => {
                     console.log(res.data)
                     this.Detail = []
-                    var data = res.data.news
+                    var data = res.data.newsList
                     var i
                     for (i in data) {
                         this.willAddColumn = []
