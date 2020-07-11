@@ -886,8 +886,8 @@
                 ],
                 data: [],
                 conditionData: [],
-                area: '',
-                industry: '',
+                area: 'all',
+                industry: 'all',
                 willAddCondition: {
                     type: '',
                     condition: '',
@@ -927,10 +927,10 @@
                 this.getRank()
             },
             areaChange(value) {
-                this.area = value.value
+                this.area = value.key
             },
             indusChange(value) {
-                this.industry = value.value
+                this.industry = value.key
             },
             orderHandle() {
                 this.reverse = false
@@ -1074,26 +1074,29 @@
                 this.getStock()
             },
             getStock() {
+                let $this = this
                 let param = new URLSearchParams();
-                console.log(JSON.stringify(this.conditionData))
-                param.append('conditionList', JSON.stringify(this.conditionData));
-                param.append('industry', this.industry);
-                param.append('area', this.area);
-                this.$api.Filter.Screen(param).then(res => {
+                console.log(JSON.stringify($this.conditionData))
+                console.log($this.industry)
+                console.log($this.area)
+                param.append('conditionList', JSON.stringify($this.conditionData));
+                param.append('industry', $this.industry);
+                param.append('area', $this.area);
+                    $this.$api.Filter.Screen(param).then(res => {
                     console.log(res)
-                    this.stockData = res.data.stocklist
-                    this.numberOfStock = this.stockData.length
+                    console.log(res.data.stockList)
+                    $this.stockData = res.data.stockList
+                    $this.numberOfStock = $this.stockData.length
                     var i
-                    for (i in this.stockData) {
+                    for (i in $this.stockData) {
                         var tmp = window.location.href
                         var arr = tmp.split("/")
                         arr.pop()
                         arr.push("StockDetail")
-                        arr.push(this.stockData[i].symbol)
+                        arr.push($this.stockData[i].symbol)
                         tmp = arr.join("/")
-                        this.stockData[i].companyLink = tmp
+                        $this.stockData[i].companyLink = tmp
                     }
-
                 })
             }
         }

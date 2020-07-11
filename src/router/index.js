@@ -7,6 +7,9 @@ import MarketStocks from "../components/MarketStocks";
 import CompanyInfo from "../components/company_info.vue"
 import FinanceIndex from "../components/finance_index.vue"
 import Screener from "../components/filter.vue"
+import Tenholder from "../components/tenHolder.vue"
+import Holdernum from "../components/holderNum.vue"
+import Newsin from "../components/news_in.vue"
 Vue.use(VueRouter);
 
 const routes = [
@@ -45,6 +48,21 @@ const routes = [
                 name: "Screener",
                 component: Screener
             },
+            {
+                path: "/StockDetail/:symbol/SDGD",
+                name: "Tenholder",
+                component: Tenholder
+            },
+            {
+                path: "/StockDetail/:symbol/GDRS",
+                name: "Holdernum",
+                component: Holdernum
+            },
+            {
+                path: "/SearchNews",
+                name: "Newsin",
+                component: Newsin
+            }
         ]
     }
 ]
