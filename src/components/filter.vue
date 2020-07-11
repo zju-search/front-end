@@ -5,7 +5,7 @@
             </a-breadcrumb>
             <a-layout style="padding: 24px 0; maxWidth:1000px; margin-left:14%; background: #fff">
 
-                <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' , minWidth: '700px'}">
+                <a-layout-content :style="{ padding: '0 24px', minHeight: '280px'}">
                     <div class="selectRange"><b>选择范围</b></div>
                     <div class="Rangeselect">
                         <span>行业：</span>

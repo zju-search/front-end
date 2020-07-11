@@ -7,6 +7,8 @@ import MarketStocks from "../components/MarketStocks";
 import CompanyInfo from "../components/company_info.vue"
 import FinanceIndex from "../components/finance_index.vue"
 import Screener from "../components/filter.vue"
+import Pledges from "../components/Pledges";
+import Performance from "../components/Performance";
 Vue.use(VueRouter);
 
 const routes = [
@@ -39,6 +41,16 @@ const routes = [
                 path: "/StockDetail/:symbol/GSJJ",
                 name: "CompanyInfo",
                 component: CompanyInfo
+            },
+            {
+                path: "/StockDetail/:symbol/GQZY",
+                name: "Pledges",
+                component: Pledges
+            },
+            {
+                path: "/StockDetail/:symbol/YJYG",
+                name: "Performance",
+                component: Performance
             },
             {
                 path: "/screener",

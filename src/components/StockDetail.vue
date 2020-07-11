@@ -13,6 +13,35 @@
                     <a-icon type="database" theme="filled" />
                     财务主要指标
                 </a-menu-item>
+                <a-menu-item key="3" @click="toShareHolder">
+                    <a-icon type="usergroup-add" />
+                    十大股东
+                </a-menu-item>
+                <a-menu-item key="4" @click="toShareHolderNum()">
+                    <a-icon type="user" />
+                    股东人数
+                </a-menu-item>
+                <a-menu-item key="5" @click="toPledges()">
+                    <a-icon type="money-collect" />
+                    股权质押统计
+                </a-menu-item>
+                <a-menu-item key="6" @click="toPerformance()">
+                    <a-icon type="build" />
+                    业绩预告
+                </a-menu-item>
+                <a-sub-menu key="sub1">
+                    <span slot="title"><a-icon type="highlight" /><span>龙虎榜</span></span>
+                    <a-sub-menu key="sub1-1" title=" 日涨幅偏离值达到7%的前五只证券">
+                        <menu-item v-for="item in chg_list" :key="item.ts_code">
+                            {{item.ts_code}} —— {{item.name}}
+                        </menu-item>
+                    </a-sub-menu>
+                    <a-sub-menu key="sub1-2" title="日换手率达到20%的前五只证券">
+                        <menu-item v-for="item in turnover_list" :key="item.ts_code">
+                            {{item.ts_code}} —— {{item.name}}
+                        </menu-item>
+                    </a-sub-menu>
+                </a-sub-menu>
             </a-menu>
         </a-layout-sider>
         <a-layout-content
@@ -70,6 +99,18 @@
                     {{parseFloat(stock_details.float_share).toFixed(2)}} 万股
                 </a-descriptions-item>
             </a-descriptions>
+            <br>
+            <a-radio-group :value="picture" @change="handleChangePicture" default-value="realtime">
+                <a-radio-button value="realtime">
+                    实时行情
+                </a-radio-button>
+                <a-radio-button value="daily">
+                    日k图
+                </a-radio-button>
+            </a-radio-group>
+            <br>
+            <div v-if="picture == 'realtime'" id="realtime"></div>
+            <div v-else id="daily"></div>
         </a-layout-content>
         <a-layout-sider width="350" style="background: #fff">
             <a-card size="small" title="简介" :style="{margin: '10px'}">
@@ -83,6 +124,9 @@
 </template>
 
 <script>
+    import {Chart} from "@antv/g2";
+    import DataSet from '@antv/data-set';
+
     export default {
         name: "StockDetail",
         data(){
@@ -91,7 +135,15 @@
                 introduction: "",
                 main_business: "",
                 ts_code: "",
-                flag: true
+                flag: true,
+                data_today: null,
+                data_history: null,
+                picture: "realtime",
+                chg_list: [
+                    {name: '特锐德', ts_code: '300001.SZ'},
+                    {name: '中国平安', ts_code: '600001.SH'}
+                    ],
+                turnover_list: [],
             }
         },
         mounted() {
@@ -114,20 +166,156 @@
             else{
                 this.flag = false;
             }
-
-            // this.stock_details = {'name': '热推的', 'symbol': 'SZ300001', 'current_price': 24.12,
-            //     'close': 22.82, 'open': 23.29, 'high': 24.53, 'low': 23.20, 'change': 1.29, 'pct_chg': 0.052,
-            //     'vol': 23.88, 'amount': 5.72, 'pe_ttm': 148.9, 'pe': 88.83, 'circ_mv': 226.15, 'total_mv': 240.51,
-            //     'turnover_rate': 0.026, 'dv_ratio': 0.00008, 'dv_ttm': 0.02, 'total_share': 9.98, 'float_share': 9.4};
-            // this.introduction = "青岛特锐德电气股份有限公司主营以" +
-            //     "户外箱式电力设备为主、户内开关柜为辅的" +
-            //     "成套变配电产品,致力于研发设计制造220kV及以下的变配" +
-            //     "电一二次产品并提供相关技术服务。公司在电气设备智能制造业务" +
-            //     "板块的主要产品有:220kV及以下模块化智能预制舱式变电站、移动式智能变电站、3" +
-            //     "5kV智能箱式变电站、10kV智能欧式箱变、铁路(客专)电力远动箱变、智能环网柜、智能开闭站、智能充电箱变、" +
-            //     "智能微网箱变、智能一体化光伏箱变、智能一体化风电箱变、GIS、H-GIS、变压器、开关柜、交直流电源屏、计量屏、一体化母线桥等。";
-            // this.main_business = "研发、生产和销售以户外箱式电力设备为主、户内开关柜为辅的成套变配电产品";
             this.ts_code = this.stock_details.symbol;
+
+            this.getDataToday();
+            this.getHistoryData();
+            this.getTigerDragon();
+        },
+        updated() {
+            const data1 = this.data_today;
+            const max = this.calculateMax();
+            const min = this.calculateMin();
+            const realtime_chart = new Chart({
+                container: 'realtime',
+                // autoFit: true,
+                width: 700,
+                height: 500,
+            });
+            realtime_chart.data(data1);
+            realtime_chart.scale({
+                time: {
+                    range: [0, 1],
+                },
+                price: {
+                    min: min-1,
+                    max: max+1,
+                    nice: true,
+                },
+            });
+            realtime_chart.tooltip({
+                showCrosshairs: true, // 展示 Tooltip 辅助线
+                shared: true,
+            });
+            realtime_chart.line().position('time*price');
+            realtime_chart.point().position('time*price');
+            realtime_chart.render();
+
+            const ds = new DataSet();
+            const dv = ds.createView();
+            dv.source(this.data_history)
+                .transform({
+                    type: 'map',
+                    callback: obj => {
+                        obj.trend = (obj.start <= obj.end) ? '上涨' : '下跌';
+                        obj.range = [obj.start, obj.end, obj.max, obj.min];
+                        return obj;
+                    }
+                });
+            const chart = new Chart({
+                container: 'daily',
+                width: 700,
+                height: 500,
+                padding: [10, 40, 40, 40]
+            });
+
+            chart.data(dv.rows);
+
+            chart.scale({
+                time: {
+                    type: 'timeCat',
+                    range: [0, 1],
+                    tickCount: 4,
+                },
+                trend: {
+                    values: ['上涨', '下跌']
+                },
+                volumn: { alias: '成交量' },
+                start: { alias: '开盘价' },
+                end: { alias: '收盘价' },
+                max: { alias: '最高价' },
+                min: { alias: '最低价' },
+                range: {
+                    alias: '股票价格',
+                    nice: true,
+                }
+            });
+            chart.tooltip({
+                showTitle: false,
+                showMarkers: false,
+                itemTpl: '<li class="g2-tooltip-list-item" data-index={index}>'
+                    + '<span style="background-color:{color};" class="g2-tooltip-marker"></span>'
+                    + '{name}{value}</li>'
+            });
+
+            const kView = chart.createView({
+                region: {
+                    start: { x: 0, y: 0 },
+                    end: { x: 1, y: 0.7 },
+                }
+            });
+            kView.data(dv.rows);
+            kView.schema()
+                .position('time*range')
+                .color('trend', val => {
+                    if (val === '上涨') {
+                        return '#f04864';
+                    }
+
+                    if (val === '下跌') {
+                        return '#2fc25b';
+                    }
+                })
+                .shape('candle')
+                .tooltip('time*start*end*max*min', (time, start, end, max, min) => {
+                    return {
+                        name: time,
+                        value: '<br><span style="padding-left: 16px">开盘价：' + start + '</span><br/>'
+                            + '<span style="padding-left: 16px">收盘价：' + end + '</span><br/>'
+                            + '<span style="padding-left: 16px">最高价：' + max + '</span><br/>'
+                            + '<span style="padding-left: 16px">最低价：' + min + '</span>'
+                    };
+                });
+
+            const barView = chart.createView({
+                region: {
+                    start: { x: 0, y: 0.7 },
+                    end: { x: 1, y: 1 },
+                }
+            });
+            barView.data(dv.rows);
+            barView.scale('vol', {
+                tickCount: 2,
+            })
+            barView.axis('time', {
+                tickLine: null,
+                label: null
+            });
+            barView.axis('vol', {
+                label: {
+                    formatter: val => {
+                        return +val / 1000 + 'k';
+                    }
+                }
+            });
+            barView.interval()
+                .position('time*vol')
+                .color('trend', val => {
+                    if (val === '上涨') {
+                        return '#f04864';
+                    }
+
+                    if (val === '下跌') {
+                        return '#2fc25b';
+                    }
+                })
+                .tooltip('time*vol', (time, volumn) => {
+                    return {
+                        name: time,
+                        value: '<br/><span style="padding-left: 16px">成交量：' + volumn + '</span><br/>'
+                    };
+                });
+            chart.render();
         },
         methods:{
             toIntroduction(){
@@ -149,6 +337,94 @@
                         companyLink: window.location.href
                     }
                 });
+            },
+            toShareHolder(){
+                this.$router.push({
+                    path: `/StockDetail/${this.ts_code}/CWZB`,
+                    query:{
+                        name: this.stock_details.name,
+                        symbol: this.ts_code,
+                        companyLink: window.location.href
+                    }
+                });
+            },
+            toShareHolderNum(){
+                this.$router.push({
+                    path: `/StockDetail/${this.ts_code}/CWZB`,
+                    query:{
+                        name: this.stock_details.name,
+                        symbol: this.ts_code,
+                        companyLink: window.location.href
+                    }
+                });
+            },
+            toPledges(){
+                this.$router.push({
+                    path: `/StockDetail/${this.ts_code}/GQZY`,
+                    query:{
+                        name: this.stock_details.name,
+                        symbol: this.ts_code,
+                        companyLink: window.location.href
+                    }
+                });
+            },
+            toPerformance(){
+                this.$router.push({
+                    path: `/StockDetail/${this.ts_code}/YJYG`,
+                    query:{
+                        name: this.stock_details.name,
+                        symbol: this.ts_code,
+                        companyLink: window.location.href
+                    }
+                });
+            },
+            getDataToday(){
+                let $this = this;
+                let param = new URLSearchParams();
+                param.append('symbol', this.ts_code);
+                this.$api.OtherDetail.CurrentData(param).then(function (response) {
+                    let data = response.data;
+                    $this.data_today = data.data;
+                });
+            },
+            getHistoryData(){
+                let $this = this;
+                let param = new URLSearchParams();
+                param.append('symbol', this.ts_code);
+                this.$api.OtherDetail.HistoryData(param).then(function (response) {
+                    let data = response.data;
+                    $this.data_history = data.data;
+                });
+            },
+            handleChangePicture(e){
+                this.picture = e.target.value;
+            },
+            calculateMax(){
+                let max = this.data_today[0].price;
+                for( let element = 1; element < this.data_today.length; element ++){
+                    if(max < this.data_today[element].price){
+                        max = this.data_today[element].price;
+                    }
+                }
+                return max;
+            },
+            calculateMin(){
+                let min = this.data_today[0].price;
+                for( let element = 1; element < this.data_today.length; element ++){
+                    if(min > this.data_today[element].price){
+                        min = this.data_today[element].price;
+                    }
+                }
+                return min;
+            },
+            getTigerDragon(){
+                // let $this = this;
+                // let param = new URLSearchParams();
+                // this.$api.OtherDetail.List(param).then(function (response) {
+                //     let data = response.data;
+                //     $this.chg_list = data.chg_list;
+                //     $this.turnover_list = data.turnover_list;
+                // });
             }
         }
     }

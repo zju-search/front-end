@@ -9,11 +9,10 @@ const Detail = {
     },
     Finance (params) {
         return axios.post(`${base.sd}/financeIndex`, params)
-  
     },
     BasicData (params) {
         return axios.post(`${base.sd}/getStockDetail`, params)
-    }
+    },
 }
 
 export default Detail
