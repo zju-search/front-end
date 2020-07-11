@@ -5,7 +5,8 @@ import CateSearch from '@/api/cs.js'
 import Market from '@/api/cs.js'
 import User from "@/api/us.js";
 import News from "@/api/news.js"
+import OtherDetail from "@/api/od.js"
 
 export default {
-    MarketCenter,Detail,Filter,CateSearch, Market, User, News
+    MarketCenter,Detail,Filter,CateSearch, Market, User, OtherDetail，News
 }

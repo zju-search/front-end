@@ -92,42 +92,46 @@
                 loading: false,
                 is_selection_visible: false,
                 market_index: null,
+                is_painted: false
             }
         },
         mounted() {
             this.getStocks();
         },
         updated() {
-            const data = this.indices;
+            if(this.is_painted ==false) {
+                const data = this.indices;
 
-            const chart = new Chart({
-                container: 'container',
-                // autoFit: true,
-                width: 550,
-                height: 300,
-            });
+                const chart = new Chart({
+                    container: 'container',
+                    // autoFit: true,
+                    width: 550,
+                    height: 300,
+                });
 
-            chart.data(data);
-            chart.scale({
-                dtime: {
-                    range: [0, 1],
-                },
-                price: {
-                    min: 4740,
-                    max: 4830,
-                    nice: true,
-                },
-            });
+                chart.data(data);
+                chart.scale({
+                    dtime: {
+                        range: [0, 1],
+                    },
+                    price: {
+                        min: 4740,
+                        max: 4830,
+                        nice: true,
+                    },
+                });
 
-            chart.tooltip({
-                showCrosshairs: true, // 展示 Tooltip 辅助线
-                shared: true,
-            });
+                chart.tooltip({
+                    showCrosshairs: true, // 展示 Tooltip 辅助线
+                    shared: true,
+                });
 
-            chart.line().position('dtime*price');
-            chart.point().position('dtime*price');
+                chart.line().position('dtime*price');
+                chart.point().position('dtime*price');
 
-            chart.render();
+                chart.render();
+                this.is_painted = true;
+            }
         },
         methods:{
             getStocks(){
