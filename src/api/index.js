@@ -8,5 +8,5 @@ import News from "@/api/news.js"
 import OtherDetail from "@/api/od.js"
 
 export default {
-    MarketCenter,Detail,Filter,CateSearch, Market, User, OtherDetail，News
+    MarketCenter,Detail,Filter,CateSearch, Market, User, OtherDetail,News
 }
