@@ -1,19 +1,5 @@
 <template>
     <a-layout id="components-layout-demo-top-side">
-        <a-layout-header class="header">
-            <div class="logo" />
-            <a-menu theme="dark" mode="horizontal" :default-selected-keys="['2']" :style="{ lineHeight: '64px' }">
-                <a-menu-item key="1">
-                    nav 1
-                </a-menu-item>
-                <a-menu-item key="2">
-                    nav 2
-                </a-menu-item>
-                <a-menu-item key="3">
-                    nav 3
-                </a-menu-item>
-            </a-menu>
-        </a-layout-header>
         <a-layout-content style="padding: 0 50px">
             <a-breadcrumb style="margin: 16px 0">
             </a-breadcrumb>
@@ -38,7 +24,7 @@
                         </a-select>
                     </div>
                     <div style="padding-top:20px; "><b>条件设置</b></div>
-                    <div>
+                    <div style="padding-left:50px; padding-top:20px;">
                         <a-checkbox-group :options="checkOptions" @change="onChange" />
                         <br />
                     </div>
@@ -68,7 +54,8 @@
                         <b>符合条件的股票{{numberOfStock}}支</b>
                     </div>
                     <div class="stocktables">
-                        <a-table :columns="stockColumns" :data-source="stockData" :pagination='true' :scroll="{x:stockColumns.length*130, y:300}">
+                        <a-table :columns="stockColumns" :data-source="stockData" :pagination='true'
+                            :scroll="{x:stockColumns.length*130, y:300}">
                             <a :href=record.companyLink target="_blank" slot="name"
                                 slot-scope="text, record">{{record.name}}({{record.symbol}})</a>
                         </a-table>
@@ -110,9 +97,6 @@
                 </a-layout-sider>
             </a-layout>
         </a-layout-content>
-        <a-layout-footer style="text-align: center">
-            Ant Design ©2018 Created by Ant UED
-        </a-layout-footer>
     </a-layout>
 </template>
 
@@ -149,7 +133,7 @@
         },
         {
             label: '股息收益率',
-            value: 'dv_radio',
+            value: 'dv_ratio',
         },
         {
             label: '市销率',
@@ -791,7 +775,7 @@
         },
         {
             label: '股息收益率',
-            value: `dv_radio:股息收益率`,
+            value: `dv_ratio:股息收益率`,
         },
         {
             label: '市销率',
@@ -860,7 +844,7 @@
                 conditionColumns: [{
                         title: '条件',
                         dataIndex: 'condition',
-                        width: '18%',
+                        width: '20%',
                         align: 'center',
                     },
                     {
@@ -875,7 +859,7 @@
                     {
                         title: '条件范围',
                         dataIndex: 'range',
-                        width: '28%',
+                        width: '26%',
                         align: 'center',
                         scopedSlots: {
                             customRender: 'slider'
@@ -929,8 +913,17 @@
                 );
             },
             optionChange(value) {
-                this.rankValue = value
-                this.columns[2].title = this.rankValue.label
+                this.rankValue = value;
+                this.columns[2].title = this.rankValue.label;
+                if (this.rankValue.key === "netprofit_yoy" || this.rankValue.key === "roe" || this.rankValue.key === "dv_ratio" || this.rankValue.key === "or_yoy" || this.rankValue.key === "roa"){
+                    this.columns[2].title += "(%)";
+                }
+                else if(this.rankValue.key === "profit_to_op" || this.rankValue.key === "profit_to_gr"){
+                    this.columns[2].title += "(亿)";
+                }
+                else if(this.rankValue.key === "total_mv" || this.rankValue.key === "circ_mv"){
+                    this.columns[2].title += "(万元)";
+                }
                 this.getRank()
             },
             areaChange(value) {
@@ -948,10 +941,10 @@
                 this.getRank()
             },
             getRank() {
-                this.$api.Filter.Rank({
-                    type: this.rankValue.key,
-                    reverse: this.reverse
-                }).then(res => {
+                let param = new URLSearchParams();
+                param.append('type', this.rankValue.key);
+                param.append('reverse', this.reverse);
+                this.$api.Filter.Rank(param).then(res => {
                     this.data = res.data.rankedObjectList;
                     var i
                     for (i in this.data) {
@@ -972,17 +965,16 @@
                     this.getCondition(val[i]);
                 }
             },
-            yearChange(year, type){
+            yearChange(year, type) {
                 var i
-                for(i in this.conditionData){
-                    if(this.conditionData[i].type != type){
+                for (i in this.conditionData) {
+                    if (this.conditionData[i].type != type) {
                         continue
-                    }
-                    else{
-                        this.$api.Filter.Condition({
-                            type: type,
-                            year: year,
-                        }).then(res =>{
+                    } else {
+                        let param = new URLSearchParams();
+                        param.append('type', type);
+                        param.append('year', year);
+                        this.$api.Filter.Condition(param).then(res => {
                             this.conditionData[i].minValue = res.data.minValue;
                             this.conditionData[i].maxValue = res.data.maxValue;
                             this.conditionData[i].range = [];
@@ -996,10 +988,12 @@
             getCondition(val) {
                 var value = val.split(':')[0]
                 var label = val.split(':')[1]
-                this.$api.Filter.Condition({
-                    type: this.willAddCondition.type,
-                    year: 2020,
-                }).then(res => {
+                let param = new URLSearchParams();
+                param.append('type', value);
+                param.append('year', 2020);
+                this.$api.Filter.Condition(param).then(res => {
+                    console.log(value)
+                    console.log('res:', res)
                     this.willAddCondition.condition = label;
                     this.willAddCondition.type = value;
                     this.willAddCondition.year = 2020;
@@ -1037,14 +1031,15 @@
                 this.stockColumns.push({
                     title: '股票',
                     dataIndex: 'name',
-                    width: '10%',
+                    width: '15%',
                     align: 'center',
                     scopedSlots: {
                         customRender: 'name'
                     },
                     defaultSortOrder: 'descend',
                     sorter: (a, b) => a.name.length - b.name.length,
-                }); this.stockColumns.push({
+                });
+                this.stockColumns.push({
                     title: '当前价',
                     dataIndex: 'close',
                     align: 'center',
@@ -1068,7 +1063,7 @@
                 for (i in this.conditionData) {
                     willAddColumn.title = this.conditionData[i].condition
                     willAddColumn.dataIndex = this.conditionData[i].type
-                    willAddColumn.sorter = (a,b) => a[willAddColumn.dataIndex] - b[willAddColumn.dataIndex]
+                    willAddColumn.sorter = (a, b) => a[willAddColumn.dataIndex] - b[willAddColumn.dataIndex]
                     this.stockColumns.push(willAddColumn)
                     willAddColumn = {
                         title: '',
@@ -1078,12 +1073,14 @@
                 }
                 this.getStock()
             },
-            getStock(){
-                this.$api.Filter.Screen({
-                    conditionList:this.conditionData,
-                    industry:this.industry,
-                    area: this.area
-                }).then(res =>{
+            getStock() {
+                let param = new URLSearchParams();
+                console.log(JSON.stringify(this.conditionData))
+                param.append('conditionList', JSON.stringify(this.conditionData));
+                param.append('industry', this.industry);
+                param.append('area', this.area);
+                this.$api.Filter.Screen(param).then(res => {
+                    console.log(res)
                     this.stockData = res.data.stocklist
                     this.numberOfStock = this.stockData.length
                     var i
@@ -1096,7 +1093,7 @@
                         tmp = arr.join("/")
                         this.stockData[i].companyLink = tmp
                     }
-                    
+
                 })
             }
         }
@@ -1123,6 +1120,7 @@
     .selectRange {
         padding-top: 3px;
         font-size: 18px;
+        padding-right: 50px;
         float: left
     }
 

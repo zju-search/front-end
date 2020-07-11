@@ -9,11 +9,11 @@ const Filter = {
     },
     //条件
     Condition(params) {
-        return axios.get(`${base.fi}/condition`,params)
+        return axios.post(`${base.fi}/condition`,params)
     },
     //筛选器
     Screen(params){
-        return axios.get(`${base.fi}/screener`,params)
+        return axios.post(`${base.fi}/screener`,params)
     }
 }
 
