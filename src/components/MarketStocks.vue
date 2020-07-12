@@ -10,10 +10,10 @@
         <a-layout-sider width="256px"  style="background: #fff">
             <a-menu
                     style="width: 256px"
-                    :default-selected-keys="['1']"
+                    :default-selected-keys="['2']"
                     mode="vertical"
             >
-                <a-menu-item key="1">
+                <a-menu-item key="1" @click="$router.push('/')">
                     <a-icon type="plus-square" />
                     沪深一览
                 </a-menu-item>
@@ -27,7 +27,11 @@
             <a-layout-content
                     :style="{ background: '#fff', padding: '24px', margin: '24px 16px 0', minHeight: '280px' }"
             >
-                <div class="font"><b>股票一览</b></div>
+                <a-breadcrumb>
+                    <a-breadcrumb-item>板块一览</a-breadcrumb-item>
+                    <a-breadcrumb-item>{{this.markets[this.market_index]}}</a-breadcrumb-item>
+                </a-breadcrumb>
+                <br>
                 <a-table :columns="columns" :data-source="stocks" :loading="loading" size="middle">
                     <a slot="tsCode" slot-scope="tsCode" @click="handleClick(tsCode)">{{tsCode}}</a>
                 </a-table>
@@ -56,13 +60,16 @@
         mounted() {
             if(typeof this.$route.query.stocks[0] == "string"){
                 this.markets = JSON.parse(localStorage.getItem('markets'));
+                this.market_index = JSON.parse(localStorage.getItem('market_index'));
                 this.stocks = JSON.parse(localStorage.getItem('stocks'));
             }
             else{
                 this.stocks = this.$route.query.stocks;
                 this.markets = this.$route.query.markets;
+                this.market_index = this.$route.query.market_index;
                 localStorage.setItem('stocks', JSON.stringify(this.stocks));
                 localStorage.setItem('markets', JSON.stringify(this.markets));
+                localStorage.setItem('market_index', JSON.stringify(this.market_index));
             }
         },
         computed:{
@@ -135,10 +142,11 @@
                     let data = response.data;
                     if(data.state == true){
                         $this.$router.push({
-                            path: 'MarketStocks/' + $this.chosen_market,
+                            path: '/MarketStocks/' + $this.chosen_market,
                             query:{
                                 stocks: data.stocks,
-                                markets: $this.markets
+                                markets: $this.markets,
+                                market_index: $this.chosen_market
                             }
                         });
                     }

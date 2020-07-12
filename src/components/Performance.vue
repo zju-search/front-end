@@ -28,7 +28,7 @@
     },
         {
             title: '内容',
-            dataIndex: 'info',
+            dataIndex: 'string',
             align: 'center'
         },
     ];
@@ -63,9 +63,9 @@
             },
             getTable: function () {
                 let param = new URLSearchParams();
-                param.append('symbol', this.symbol);
+                param.append('ts_code', this.symbol);
                 this.$api.OtherDetail.Performance(param).then(res => {
-                    this.data = res.data.companyInfoList;
+                    this.data = res.data.prediction;
                 })
             }
         }

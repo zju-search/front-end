@@ -98,14 +98,14 @@
 
         <a-menu mode="horizontal" :style="{backgroundColor: '#4682B4', color:'#ffffff'}">
             <a-menu-item @click="$router.push('/')">
-                <a-icon type="mail"/>
-                首页
+                <a-icon type="home" />
+                韭菜之家！
             </a-menu-item>
             <a-menu-item @click="$router.push('/screener')">
                 <a-icon type="appstore"/>
                 筛选器
             </a-menu-item>
-            <a-menu-item @click="$router.push('/searchNews')">
+            <a-menu-item @click="$router.push('/SearchNews')">
                 <a-icon type="reconciliation" />
                 新闻中心
             </a-menu-item>
@@ -200,17 +200,23 @@
                         VueCookies.set("token", token, "1d");
                         VueCookies.set("email", email, "1d");
                         $this.isLogin = true;
+                        $this.user_login_visible = false;
                         router.push("/");
                     }
                     else{
                         alert(data.message);
                     }
                 });
-                this.user_login_visible = false;
 
             },
             confirmRegister(){
                 this.form.validateFields((err, values) => {
+                    if(values.username == ''){
+                        this.$error({
+                            title: '错误',
+                            content: '请输入用户名！',
+                        })
+                    }
                     if (this.captcha == '' || values.captcha != this.captcha) {
                         this.$error({
                             title: '错误',
@@ -256,18 +262,18 @@
             //暂时支持
             confirmModify(){
                 this.form.validateFields((err, values) => {
+                    if (values.email == '' || values.password == '' || values.password != values.confirm) {
+                        this.$error({
+                            title: '错误',
+                            content: '请输入邮箱和密码！',
+                        })
+                    }
                     if (this.captcha == '' || values.captcha != this.captcha) {
                         this.$error({
                             title: '错误',
                             content: '请输入正确的验证码！',
                         });
                         return;
-                    }
-                    if (values.email == '' || values.password == '' || values.password != values.confirm) {
-                        this.$error({
-                            title: '错误',
-                            content: '请输入邮箱和密码！',
-                        })
                     }
                     else {
                         let $this = this;
@@ -348,6 +354,7 @@
                 param.append('ts_code', value);
                 this.$api.Detail.BasicData(param).then(function (response) {
                     let data = response.data;
+                    console.log(data);
                     if(data.state == true){
                         $this.$router.push({
                             path: `/StockDetail/ + ${data.stocks.symbol}`,
@@ -355,6 +362,8 @@
                                 data: data,
                             }
                         });
+                        // let routeData = $this.$router.resolve({ path: `/StockDetail/ + ${data.stocks.symbol}`, query: {  data: data } });
+                        // window.open(routeData.href, '_blank');
                     }
                     else{
                         alert("未找到该股票！");
