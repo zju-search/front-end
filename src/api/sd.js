@@ -3,7 +3,6 @@ import axios from '@/utils/http'
 
 
 const Detail = {
-    //排行榜
     Info (params) {
         return axios.post(`${base.sd}/CompanyInfo`, params)
     },
@@ -11,10 +10,11 @@ const Detail = {
         return axios.post(`${base.sd}/financeIndex`, params)
     },
     Tenholder (params) {
+
         return axios.post(`${base.od}/tenShareHolder`, params)
     },
     Holdernum(params){
-        return axios.post(`${base.od}/shareHolderNum`, params)
+        return axios.post(`http://39.99.218.252:7000/navigate-to-page//shareHolderNum`, params)
     },
     BasicData (params) {
         return axios.post(`${base.sd}/getStockDetail`, params)

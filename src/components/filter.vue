@@ -56,8 +56,7 @@
                     <div class="stocktables">
                         <a-table :columns="stockColumns" :data-source="stockData" :pagination='true'
                             :scroll="{x:stockColumns.length*130, y:1000}">
-                            <a :href=record.companyLink target="_blank" slot="name"
-                                slot-scope="text, record">{{record.name}}({{record.symbol}})</a>
+                            <span  slot="name" slot-scope="text, record">{{record.name}}({{record.ts_code}})</span>
                         </a-table>
                     </div>
                 </a-layout-content>
@@ -90,8 +89,7 @@
                     </div>
                     <div class="ranktables">
                         <a-table :columns="columns" :data-source="data" :pagination='false'>
-                            <a :href=record.companyLink target="_blank" slot="name"
-                                slot-scope="text, record">{{record.name}}({{record.symbol}})</a>
+                            <span  slot="name" slot-scope="text, record">{{record.name}}({{record.ts_code}})</span>
                         </a-table>
                     </div>
                 </a-layout-sider>
@@ -821,7 +819,7 @@
                 columns: [{
                         title: '股票',
                         dataIndex: 'name',
-                        width: '30%',
+                        width: '36%',
                         align: 'center',
                         scopedSlots: {
                             customRender: 'name'
@@ -970,23 +968,13 @@
                 param.append('reverse', this.reverse);
                 this.$api.Filter.Rank(param).then(res => {
                     this.data = res.data.rankedObjectList;
-                    var i
-                    for (i in this.data) {
-                        var tmp = window.location.href
-                        var arr = tmp.split("/")
-                        arr.pop()
-                        arr.push("StockDetail")
-                        arr.push(this.data[i].symbol)
-                        tmp = arr.join("/")
-                        this.data[i].companyLink = tmp
-                    }
                 })
             },
-            onChange(val) {
+            async onChange(val) {
                 this.conditionData = []
                 var i
                 for (i in val) {
-                    this.getCondition(val[i]);
+                    await this.getCondition(val[i]);
                 }
             },
             yearChange(year, type) {
@@ -1059,20 +1047,9 @@
                 param.append('conditionList', JSON.stringify($this.conditionData));
                 param.append('industry', $this.industry);
                 param.append('area', $this.area);
-                    $this.$api.Filter.Screen(param).then(res => {
-                    
+                    $this.$api.Filter.Screen(param).then(res => {                   
                     $this.stockData = res.data.stockList
                     $this.numberOfStock = $this.stockData.length
-                    var i
-                    for (i in $this.stockData) {
-                        var tmp = window.location.href
-                        var arr = tmp.split("/")
-                        arr.pop()
-                        arr.push("StockDetail")
-                        arr.push($this.stockData[i].symbol)
-                        tmp = arr.join("/")
-                        $this.stockData[i].companyLink = tmp
-                    }
                 })
             }
         }

@@ -81,7 +81,7 @@
         this.name = params.name;
         this.symbol = params.symbol;
       },
-      getTable: function () {
+      async getTable() {
         var i
         for (i = 0; i < 10; i = i + 1) {
           var year = 2019 - i
@@ -89,7 +89,7 @@
           console.log('year:', year)
           param.append('symbol', this.symbol);
           param.append('year', year)
-          this.$api.Detail.Tenholder(param).then(res => {
+          await this.$api.Detail.Tenholder(param).then(res => {
             this.willAddColumns = [{
                 title: '截止日期',
                 children: [{
@@ -123,7 +123,9 @@
                 ]
               }
             ];
+            this.willAddData = [];
             this.willAddData = res.data.holderList;
+            console.log(res)
             this.willAddColumns[1].title = res.data.holderList[0].year + '年报';
             this.Detail.push({
               columns: this.willAddColumns,
