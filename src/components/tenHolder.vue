@@ -123,7 +123,9 @@
                 ]
               }
             ];
+            this.willAddData = [];
             this.willAddData = res.data.holderList;
+            console.log(res)
             this.willAddColumns[1].title = res.data.holderList[0].year + '年报';
             this.Detail.push({
               columns: this.willAddColumns,

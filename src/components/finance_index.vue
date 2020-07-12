@@ -52,31 +52,31 @@
     },
     {
       title: '2019年报',
-      dataIndex: '2019',
+      dataIndex: '_2019',
       width: '18%',
       align: 'center'
     },
     {
       title: '2018年报',
-      dataIndex: '2018',
+      dataIndex: '_2018',
       width: '18%',
       align: 'center'
     },
     {
       title: '2017年报',
-      dataIndex: '2017',
+      dataIndex: '_2017',
       width: '18%',
       align: 'center'
     },
     {
       title: '2016年报',
-      dataIndex: '2016',
+      dataIndex: '_2016',
       width: '18%',
       align: 'center'
     },
     {
       title: '2015年报',
-      dataIndex: '2015',
+      dataIndex: '_2015',
       width: '18%',
       align: 'center'
     },
@@ -89,31 +89,31 @@
     },
     {
       title: '2014年报',
-      dataIndex: '2014',
+      dataIndex: '_2014',
       width: '18%',
       align: 'center'
     },
     {
       title: '2013年报',
-      dataIndex: '2013',
+      dataIndex: '_2013',
       width: '18%',
       align: 'center'
     },
     {
       title: '2012年报',
-      dataIndex: '2012',
+      dataIndex: '_2012',
       width: '18%',
       align: 'center'
     },
     {
       title: '2011年报',
-      dataIndex: '2011',
+      dataIndex: '_2011',
       width: '18%',
       align: 'center'
     },
     {
       title: '2010年报',
-      dataIndex: '2010',
+      dataIndex: '_2010',
       width: '18%',
       align: 'center'
     },

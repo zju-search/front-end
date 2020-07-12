@@ -340,7 +340,7 @@
             },
             toShareHolder(){
                 this.$router.push({
-                    path: `/StockDetail/${this.ts_code}/CWZB`,
+                    path: `/StockDetail/${this.ts_code}/SDGD`,
                     query:{
                         name: this.stock_details.name,
                         symbol: this.ts_code,
@@ -350,7 +350,7 @@
             },
             toShareHolderNum(){
                 this.$router.push({
-                    path: `/StockDetail/${this.ts_code}/CWZB`,
+                    path: `/StockDetail/${this.ts_code}/GDRS`,
                     query:{
                         name: this.stock_details.name,
                         symbol: this.ts_code,
