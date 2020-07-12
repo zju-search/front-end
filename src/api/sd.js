@@ -19,6 +19,12 @@ const Detail = {
     BasicData (params) {
         return axios.post(`${base.sd}/getStockDetail`, params)
     },
+    CurrentData (params){
+        return axios.post(`${base.sd}/getDataToday`, params)
+    },
+    HistoryData (params){
+        return axios.post(`${base.sd}/getHistoryData`, params)
+    },
 }
 
 export default Detail

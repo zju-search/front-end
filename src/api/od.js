@@ -3,12 +3,6 @@ import axios from '@/utils/http'
 
 const OtherDetail = {
 
-    CurrentData (params){
-        return axios.post(`${base.od}/getDataToday`, params)
-    },
-    HistoryData (params){
-        return axios.post(`${base.od}/getHistoryData`, params)
-    },
     Pledge (params){
         return axios.post(`${base.od}/getPledgeData`, params)
     },

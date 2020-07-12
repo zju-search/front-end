@@ -98,14 +98,14 @@
 
         <a-menu mode="horizontal" :style="{backgroundColor: '#4682B4', color:'#ffffff'}">
             <a-menu-item @click="$router.push('/')">
-                <a-icon type="mail"/>
-                首页
+                <a-icon type="home" />
+                韭菜之家！
             </a-menu-item>
             <a-menu-item @click="$router.push('/screener')">
                 <a-icon type="appstore"/>
                 筛选器
             </a-menu-item>
-            <a-menu-item @click="$router.push('/searchNews')">
+            <a-menu-item @click="$router.push('/SearchNews')">
                 <a-icon type="reconciliation" />
                 新闻中心
             </a-menu-item>

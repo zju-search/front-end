@@ -39,6 +39,7 @@
                         :loading="loading"
                         size="middle"
                 >
+                    <a slot="tsCode" slot-scope="tsCode" @click="handleClick(tsCode)">{{tsCode}}</a>
                 </a-table>
             </a-layout-content>
         </a-layout>
@@ -48,6 +49,7 @@
 
 <script>
     import { Chart } from '@antv/g2';
+    import VueCookies from "vue-cookies";
     const columns = [
         {
             title: '股票名称',
@@ -57,6 +59,8 @@
         {
             title: '股票代码',
             dataIndex: 'tsCode',
+            slots: {title: 'tsCode'},
+            scopedSlots: { customRender: 'tsCode' },
         },
         {
             title: '当前价',
@@ -89,7 +93,7 @@
                 stocks: [],
                 columns,
                 pagination: {pageSize: 149,},
-                loading: false,
+                loading: true,
                 is_selection_visible: false,
                 market_index: null,
                 is_painted: false
@@ -143,6 +147,7 @@
                         $this.indices = data.indices;
                         $this.stocks = data.stocks;
                         $this.markets = data.markets;
+                        $this.loading = false;
                     }
                     else{
                         alert("数据加载错误！");
@@ -163,7 +168,8 @@
                             path: '/MarketStocks/' + $this.market_index,
                             query:{
                                 stocks: data.stocks,
-                                markets: $this.markets
+                                markets: $this.markets,
+                                market_index: $this.market_index
                             }
                         });
                     }
@@ -175,6 +181,27 @@
             handleSelectionChange(value){
                 this.market_index = value.key;
             },
+            handleClick(ts_code){
+                let $this = this;
+                let token = VueCookies.get('token');
+                let param = new URLSearchParams();
+                param.append('token', token);
+                param.append('ts_code', ts_code);
+                this.$api.Detail.BasicData(param).then(function (response) {
+                    let data = response.data;
+                    if(data.state == true){
+                        $this.$router.push({
+                            path: `/StockDetail/ + ${data.stocks.symbol}`,
+                            query:{
+                                data: data,
+                            }
+                        });
+                    }
+                    else{
+                        alert("未找到该股票！");
+                    }
+                })
+            }
         }
     }
 </script>
