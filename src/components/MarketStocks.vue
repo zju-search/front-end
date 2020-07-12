@@ -142,10 +142,11 @@
                     let data = response.data;
                     if(data.state == true){
                         $this.$router.push({
-                            path: 'MarketStocks/' + $this.chosen_market,
+                            path: '/MarketStocks/' + $this.chosen_market,
                             query:{
                                 stocks: data.stocks,
-                                markets: $this.markets
+                                markets: $this.markets,
+                                market_index: $this.chosen_market
                             }
                         });
                     }

@@ -11,10 +11,10 @@ const Detail = {
         return axios.post(`${base.sd}/financeIndex`, params)
     },
     Tenholder (params) {
-        return axios.post(`${base.sd}/tenShareHolder`, params)
+        return axios.post(`${base.od}/tenShareHolder`, params)
     },
     Holdernum(params){
-        return axios.post(`${base.sd}/shareHolderNum`, params)
+        return axios.post(`${base.od}/shareHolderNum`, params)
     },
     BasicData (params) {
         return axios.post(`${base.sd}/getStockDetail`, params)

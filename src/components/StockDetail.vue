@@ -106,8 +106,8 @@
                     日k图
                 </a-radio-button>
             </a-radio-group>
-            <div id="realtime"></div>
-            <div id="daily"></div>
+            <div v-if="picture=='realtime'" id="realtime"></div>
+            <div v-if="picture=='daily'" id="daily"></div>
         </a-layout-content>
         <a-layout-sider width="350" style="background: #fff">
             <a-card size="small" title="简介" :style="{margin: '10px'}">
@@ -148,34 +148,9 @@
                 chart: null,
             }
         },
-        beforeMount() {
-            // let data = null;
-            // if (typeof this.$route.query.data == "string") {
-            //     data = JSON.parse(localStorage.getItem('data'));
-            // }
-            // else {
-            //     data = this.$route.query.data;
-            //     localStorage.setItem('data', JSON.stringify(data));
-            // }
-            //
-            // this.stock_details =data.stocks;
-            // this.introduction = data.introduction;
-            // this.main_business = data.main_business;
-            //
-            // if(this.stock_details.change >= 0){
-            //     this.flag = true;
-            // }
-            // else{
-            //     this.flag = false;
-            // }
-            // this.ts_code = this.stock_details.symbol;
-            //
-            // this.getDataToday();
-            // this.getHistoryData();
-            // this.getTigerDragon();
-        },
         mounted() {
             let data = null;
+            console.log(this.$route.query);
             if (typeof this.$route.query.data == "string") {
                 data = JSON.parse(localStorage.getItem('data'));
             }
@@ -199,6 +174,20 @@
             this.getDataToday();
             this.getHistoryData();
             this.getTigerDragon();
+        },
+        updated() {
+            if(this.picture == 'realtime'){
+                if(this.chart != null) {
+                    this.chart.destroy();
+                }
+                if(this.data_today != null) {
+                    this.drawRealtimePicture();
+                }
+            }
+            else{
+                this.realtime_chart.destroy();
+                this.drawKPicture();
+            }
         },
         methods:{
             toIntroduction(){
@@ -267,36 +256,7 @@
                 param.append('symbol', this.ts_code);
                 this.$api.Detail.CurrentData(param).then(function (response) {
                     let data = response.data;
-                    console.log(data);
                     $this.data_today = data.todayDataList;
-                    $this.max = $this.calculateMax();
-                    $this.min = $this.calculateMin();
-                    const data1 = $this.data_today;
-                    $this.realtime_chart = new Chart({
-                        container: 'realtime',
-                        autoFit: true,
-                        width: 700,
-                        height: 500,
-                        visible: false
-                    });
-                    $this.realtime_chart.data(data1);
-                    $this.realtime_chart.scale({
-                        dtime: {
-                            range: [0, 1],
-                        },
-                        price: {
-                            min: $this.min-5,
-                            max: $this.max+5,
-                            nice: true,
-                        },
-                    });
-                    $this.realtime_chart.tooltip({
-                        showCrosshairs: true, // 展示 Tooltip 辅助线
-                        shared: true,
-                    });
-                    $this.realtime_chart.line().position('dtime*price');
-                    $this.realtime_chart.point().position('dtime*price');
-                    $this.realtime_chart.render();
                 });
             },
             getHistoryData(){
@@ -305,124 +265,7 @@
                 param.append('symbol', this.ts_code);
                 this.$api.Detail.HistoryData(param).then(function (response) {
                     $this.data_history = response.data.pastDataList;
-                    const ds = new DataSet();
-                    const dv = ds.createView();
-                    dv.source($this.data_history)
-                        .transform({
-                            type: 'map',
-                            callback: obj => {
-                                obj.trend = (obj.open <= obj.close) ? '上涨' : '下跌';
-                                obj.range = [obj.open, obj.close, obj.max, obj.min];
-                                return obj;
-                            }
-                        });
-                    $this.chart = new Chart({
-                        autoFit: true,
-                        container: 'daily',
-                        width: 1300,
-                        height: 500,
-                        padding: [10, 40, 40, 40],
-                    });
-                    console.log($this.chart.visible)
-                    $this.chart.data(dv.rows);
-                    console.log(dv.rows);
 
-                    $this.chart.scale({
-                        time: {
-                            type: 'timeCat',
-                            range: [0, 1],
-                            tickCount: 4,
-                        },
-                        trend: {
-                            values: ['上涨', '下跌']
-                        },
-                        volumn: { alias: '成交量' },
-                        open: { alias: '开盘价' },
-                        close: { alias: '收盘价' },
-                        max: { alias: '最高价' },
-                        min: { alias: '最低价' },
-                        range: {
-                            alias: '股票价格',
-                            nice: true,
-                        }
-                    });
-                    $this.chart.tooltip({
-                        showTitle: false,
-                        showMarkers: false,
-                        itemTpl: '<li class="g2-tooltip-list-item" data-index={index}>'
-                            + '<span style="background-color:{color};" class="g2-tooltip-marker"></span>'
-                            + '{name}{value}</li>'
-                    });
-                    console.log($this.chart.tooltip())
-
-                    const kView = $this.chart.createView({
-                        region: {
-                            start: { x: 0, y: 0 },
-                            end: { x: 1, y: 0.7 },
-                        }
-                    });
-                    kView.data(dv.rows);
-                    kView.schema()
-                        .position('time*range')
-                        .color('trend', val => {
-                            if (val === '上涨') {
-                                return '#f04864';
-                            }
-
-                            if (val === '下跌') {
-                                return '#2fc25b';
-                            }
-                        })
-                        .shape('candle')
-                        .tooltip('time*open*close*max*min', (time, open, close, max, min) => {
-                            return {
-                                name: time,
-                                value: '<br><span style="padding-left: 16px">开盘价：' + open + '</span><br/>'
-                                    + '<span style="padding-left: 16px">收盘价：' + close + '</span><br/>'
-                                    + '<span style="padding-left: 16px">最高价：' + max + '</span><br/>'
-                                    + '<span style="padding-left: 16px">最低价：' + min + '</span>'
-                            };
-                        });
-                    console.log(kView)
-                    const barView = $this.chart.createView({
-                        region: {
-                            start: { x: 0, y: 0.7 },
-                            end: { x: 1, y: 1 },
-                        }
-                    });
-                    barView.data(dv.rows);
-                    barView.scale('vol', {
-                        tickCount: 2,
-                    })
-                    barView.axis('time', {
-                        tickLine: null,
-                        label: null
-                    });
-                    barView.axis('vol', {
-                        label: {
-                            formatter: val => {
-                                return +val / 1000 + 'k';
-                            }
-                        }
-                    });
-                    barView.interval()
-                        .position('time*vol')
-                        .color('trend', val => {
-                            if (val === '上涨') {
-                                return '#f04864';
-                            }
-
-                            if (val === '下跌') {
-                                return '#2fc25b';
-                            }
-                        })
-                        .tooltip('time*vol', (time, volumn) => {
-                            return {
-                                name: time,
-                                value: '<br/><span style="padding-left: 16px">成交量：' + volumn + '</span><br/>'
-                            };
-                        });
-                    $this.chart.render();
                 });
             },
             handleChangePicture(e){
@@ -447,14 +290,161 @@
                 return min;
             },
             getTigerDragon(){
-                // let $this = this;
-                // let param = new URLSearchParams();
-                // this.$api.OtherDetail.List(param).then(function (response) {
-                //     let data = response.data;
-                //     console.log(response);
-                //     $this.chg_list = data.chg_list;
-                //     $this.turnover_list = data.turnover_list;
-                // });
+                let $this = this;
+                let param = new URLSearchParams();
+                this.$api.OtherDetail.List(param).then(function (response) {
+                    let data = response.data;
+                    $this.chg_list = data.chg_list;
+                    $this.turnover_list = data.turnover_list;
+                });
+            },
+            drawKPicture(){
+                let $this = this;
+                const ds = new DataSet();
+                const dv = ds.createView();
+                dv.source($this.data_history)
+                    .transform({
+                        type: 'map',
+                        callback: obj => {
+                            obj.trend = (obj.open <= obj.close) ? '上涨' : '下跌';
+                            obj.range = [obj.open, obj.close, obj.max, obj.min];
+                            return obj;
+                        }
+                    });
+                $this.chart = new Chart({
+                    autoFit: true,
+                    container: 'daily',
+                    width: 1300,
+                    height: 500,
+                    padding: [10, 40, 40, 40],
+                });
+                $this.chart.data(dv.rows);
+
+                $this.chart.scale({
+                    time: {
+                        type: 'timeCat',
+                        range: [0, 1],
+                        tickCount: 4,
+                    },
+                    trend: {
+                        values: ['上涨', '下跌']
+                    },
+                    volumn: { alias: '成交量' },
+                    open: { alias: '开盘价' },
+                    close: { alias: '收盘价' },
+                    max: { alias: '最高价' },
+                    min: { alias: '最低价' },
+                    range: {
+                        alias: '股票价格',
+                        nice: true,
+                    }
+                });
+                $this.chart.tooltip({
+                    showTitle: false,
+                    showMarkers: false,
+                    itemTpl: '<li class="g2-tooltip-list-item" data-index={index}>'
+                        + '<span style="background-color:{color};" class="g2-tooltip-marker"></span>'
+                        + '{name}{value}</li>'
+                });
+
+                const kView = $this.chart.createView({
+                    region: {
+                        start: { x: 0, y: 0 },
+                        end: { x: 1, y: 0.7 },
+                    }
+                });
+                kView.data(dv.rows);
+                kView.schema()
+                    .position('time*range')
+                    .color('trend', val => {
+                        if (val === '上涨') {
+                            return '#f04864';
+                        }
+
+                        if (val === '下跌') {
+                            return '#2fc25b';
+                        }
+                    })
+                    .shape('candle')
+                    .tooltip('time*open*close*max*min', (time, open, close, max, min) => {
+                        return {
+                            name: time,
+                            value: '<br><span style="padding-left: 16px">开盘价：' + open + '</span><br/>'
+                                + '<span style="padding-left: 16px">收盘价：' + close + '</span><br/>'
+                                + '<span style="padding-left: 16px">最高价：' + max + '</span><br/>'
+                                + '<span style="padding-left: 16px">最低价：' + min + '</span>'
+                        };
+                    });
+                const barView = $this.chart.createView({
+                    region: {
+                        start: { x: 0, y: 0.7 },
+                        end: { x: 1, y: 1 },
+                    }
+                });
+                barView.data(dv.rows);
+                barView.scale('vol', {
+                    tickCount: 2,
+                });
+                barView.axis('time', {
+                    tickLine: null,
+                    label: null
+                });
+                barView.axis('vol', {
+                    label: {
+                        formatter: val => {
+                            return +val / 1000 + 'k';
+                        }
+                    }
+                });
+                barView.interval()
+                    .position('time*vol')
+                    .color('trend', val => {
+                        if (val === '上涨') {
+                            return '#f04864';
+                        }
+
+                        if (val === '下跌') {
+                            return '#2fc25b';
+                        }
+                    })
+                    .tooltip('time*vol', (time, volumn) => {
+                        return {
+                            name: time,
+                            value: '<br/><span style="padding-left: 16px">成交量：' + volumn + '</span><br/>'
+                        };
+                    });
+                $this.chart.render();
+            },
+            drawRealtimePicture(){
+                let $this = this;
+                $this.max = $this.calculateMax();
+                $this.min = $this.calculateMin();
+                const data1 = $this.data_today;
+                $this.realtime_chart = new Chart({
+                    container: 'realtime',
+                    autoFit: true,
+                    width: 700,
+                    height: 500,
+                });
+                console.log(data1);
+                $this.realtime_chart.data(data1);
+                $this.realtime_chart.scale({
+                    dtime: {
+                        range: [0, 1],
+                    },
+                    price: {
+                        min: $this.min-5,
+                        max: $this.max+5,
+                        nice: true,
+                    },
+                });
+                $this.realtime_chart.tooltip({
+                    showCrosshairs: true, // 展示 Tooltip 辅助线
+                    shared: true,
+                });
+                $this.realtime_chart.line().position('dtime*price');
+                $this.realtime_chart.point().position('dtime*price');
+                $this.realtime_chart.render();
             }
         }
     }
