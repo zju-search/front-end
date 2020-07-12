@@ -4,24 +4,10 @@
             <label>邮箱：</label>
             <a-input
                 v-model="input_email"
-                v-decorator="[
-                   'email',
-                    {
-                        rules: [
-                            {
-                                type: 'email',
-                                message: 'The input is not valid E-mail!',
-                            },
-                            {
-                                required: true,
-                                message: 'Please input your E-mail!',
-                            },
-                        ],
-                    },
-                ]"
+                v-decorator="['email',{rules: [{type: 'email', message: 'The input is not valid E-mail!',}, {required: true, message: 'Please input your E-mail!'}]}]"
             />
             <label>密码：</label>
-            <a-input type="password" v-model="input_password" v-decorator="['password', { rules: [{ required: true, message: '请输入用户密码' }] }]"/>
+            <a-input type="password" v-model="input_password" v-decorator="['password', { rules: [{ required: true, message: '请输入用户密码' }]}]"/>
             <a @click="modifyPassword" :style="{float: 'right'}">忘记密码</a>
             <br /><br />
             <a @click="userRegister"><u>点击注册</u></a>
@@ -29,72 +15,27 @@
         <a-modal v-model="user_register_visible" title="| 用户注册" @ok="confirmRegister" ok-text="注册" cancel-text="取消" width="600px">
             <div>
                 <a-form :form="form" :style="{paddingRight: '100px'}">
-                    <a-form-item v-bind="formItemLayout" label="单位名称">
+                    <a-form-item v-bind="formItemLayout" label="用户名称">
                         <a-input
-                            v-decorator="[
-                            'company',
-                            {
-                                rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
-                            },
-                            ]"
+                            v-decorator="['username',{rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }]}]"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="登录密码" has-feedback>
                         <a-input
                             type="password"
-                            v-decorator="[
-                                'password',
-                                {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: 'Please input your password!',
-                                        },
-                                        {
-                                            validator: validateToNextPassword,
-                                        },
-                                    ],
-                                },
-                            ]"
+                            v-decorator="[ 'password', {rules: [{required: true, message: 'Please input your password!',},{validator: validateToNextPassword}]}]"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="重复密码" has-feedback>
                         <a-input
                             type="password"
-                            v-decorator="[
-                                'confirm',
-                                {
-                                    rules: [
-                                        {
-                                          required: true,
-                                          message: 'Please confirm your password!',
-                                        },
-                                        {
-                                          validator: compareToFirstPassword,
-                                        },
-                                    ],
-                                },
-                            ]"
+                            v-decorator="['confirm', {rules: [{required: true, message: 'Please confirm your password!',}, {validator: compareToFirstPassword}]}]"
                             @blur="handleConfirmBlur"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="单位邮箱">
                         <a-input
-                            v-decorator="[
-                               'email',
-                                {
-                                    rules: [
-                                        {
-                                            type: 'email',
-                                            message: 'The input is not valid E-mail!',
-                                        },
-                                        {
-                                            required: true,
-                                            message: 'Please input your E-mail!',
-                                        },
-                                    ],
-                                },
-                            ]"
+                            v-decorator="['email', {rules: [{type: 'email', message: 'The input is not valid E-mail!',},{required: true, message: 'Please input your E-mail!'}]}]"
                         />
                     </a-form-item>
                     <a-form-item
@@ -104,10 +45,7 @@
                         <a-row :gutter="8">
                             <a-col :span="12">
                                 <a-input
-                                    v-decorator="[
-                                        'captcha',
-                                        { rules: [{ required: true, message: '输入验证码有误！' }] },
-                                    ]"
+                                    v-decorator="['captcha',{ rules: [{ required: true, message: '输入验证码有误！' }]}]"
                                 />
                             </a-col>
                             <a-col :span="12">
@@ -123,60 +61,20 @@
                 <a-form :form="form" :style="{paddingRight: '100px'}">
                     <a-form-item v-bind="formItemLayout" label="新密码" has-feedback>
                         <a-input
-                                type="password"
-                                v-decorator="[
-                                'password',
-                                {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: 'Please input your password!',
-                                        },
-                                        {
-                                            validator: validateToNextPassword,
-                                        },
-                                    ],
-                                },
-                            ]"
+                            type="password"
+                            v-decorator="['password',{rules: [{required: true, message: 'Please input your password!'},{validator: validateToNextPassword}]}]"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="重复密码" has-feedback>
                         <a-input
-                                type="password"
-                                v-decorator="[
-                                'confirm',
-                                {
-                                    rules: [
-                                        {
-                                          required: true,
-                                          message: 'Please confirm your password!',
-                                        },
-                                        {
-                                          validator: compareToFirstPassword,
-                                        },
-                                    ],
-                                },
-                            ]"
-                                @blur="handleConfirmBlur"
+                            type="password"
+                            v-decorator="['confirm',{rules: [{required: true,message: 'Please confirm your password!'},{validator: compareToFirstPassword}]}]"
+                            @blur="handleConfirmBlur"
                         />
                     </a-form-item>
                     <a-form-item v-bind="formItemLayout" label="单位邮箱">
                         <a-input
-                                v-decorator="[
-                               'email',
-                                {
-                                    rules: [
-                                        {
-                                            type: 'email',
-                                            message: 'The input is not valid E-mail!',
-                                        },
-                                        {
-                                            required: true,
-                                            message: 'Please input your E-mail!',
-                                        },
-                                    ],
-                                },
-                            ]"
+                            v-decorator="['email',{rules: [{type: 'email',message: 'The input is not valid E-mail!',},{required: true,message: 'Please input your E-mail!'}]}]"
                         />
                     </a-form-item>
                     <a-form-item
@@ -186,10 +84,7 @@
                         <a-row :gutter="8">
                             <a-col :span="12">
                                 <a-input
-                                        v-decorator="[
-                                        'captcha',
-                                        { rules: [{ required: true, message: '输入验证码有误！' }] },
-                                    ]"
+                                    v-decorator="['captcha',{ rules: [{ required: true, message: '输入验证码有误！'}]}]"
                                 />
                             </a-col>
                             <a-col :span="12">
@@ -201,31 +96,30 @@
             </div>
         </a-modal>
 
-        <a-menu mode="horizontal">
-            <a-menu-item>
-                <a-icon type="mail"/>
-                首页
+        <a-menu mode="horizontal" :style="{backgroundColor: '#4682B4', color:'#ffffff'}">
+            <a-menu-item @click="$router.push('/')">
+                <a-icon type="home" />
+                韭菜之家！
             </a-menu-item>
-            <a-menu-item>
+            <a-menu-item @click="$router.push('/screener')">
                 <a-icon type="appstore"/>
-                训练任务
+                筛选器
+            </a-menu-item>
+            <a-menu-item @click="$router.push('/SearchNews')">
+                <a-icon type="reconciliation" />
+                新闻中心
             </a-menu-item>
             <a-menu-item>
-                <a-icon type="setting"/>
-                模型
-            </a-menu-item>
-            <a-menu-item>
-                <a-icon type="project"/>
-                数据字典
+                <a-input-search placeholder="请输入股票代码" @search="startSearch" />
             </a-menu-item>
             <a-sub-menu v-if="isLogin" :style="{float:'right'}">
                 <span slot="title" class="submenu-title-wrapper">
-                    <a-icon type="team" />{{name}}</span>
+                    <a-icon type="team" />{{username}}</span>
                 <a-menu-item key="info: modifyPwd" @click="modifyPassword">
                     修改密码
                 </a-menu-item>
             </a-sub-menu>
-            <a-menu-item :style="{float:'right'}" v-if="isLogin">
+            <a-menu-item :style="{float:'right'}" v-if="isLogin" @click="quitLogin">
                 <a-icon type="logout"/>
                 退出
             </a-menu-item>
@@ -234,7 +128,7 @@
                 登录
             </a-menu-item>
         </a-menu>
-        <a-layout-content :style="{ margin: '20px 20px'}">
+        <a-layout-content>
             <RouterView></RouterView>
         </a-layout-content>
         <a-layout-footer style="textAlign: center">
@@ -250,7 +144,7 @@
     export default {
         name: 'Index',
         beforeCreate() {
-            this.name = VueCookies.get('name');
+            this.username = VueCookies.get('username');
             this.token = VueCookies.get("token");
             this.email = VueCookies.get("email");
         },
@@ -258,15 +152,12 @@
             return {
                 form: this.$form.createForm(this, { name: 'register' }),
                 isLogin: false,
-                name: VueCookies.get('name'),
+                username: VueCookies.get('username'),
                 user_login_visible: false,
                 user_register_visible: false,
                 user_modifyPwd_visible: false,
                 input_email: '',
                 input_password: '',
-                email: 'pat@163.com',
-                password: '123456',
-                company: '西部投资',
                 captcha: '',
                 confirm: '',
                 confirmDirty: false,
@@ -294,35 +185,70 @@
                 this.user_modifyPwd_visible = true;
             },
             confirmLogin(){
-                if(this.input_email == this.email && this.input_password == this.password){
-                    console.log(this.company);
-                    VueCookies.set('name' , this.company, "1d");
-                    this.user_login_visible = false;
-                    this.isLogin = true;
-                    router.push("/trainTask");
-                }
+                let $this = this;
+                let param = new URLSearchParams();
+                param.append('email', this.input_email);
+                param.append('password', this.input_password);
+                let email = this.input_email;
+                this.$api.User.Login(param).then(function (response) {
+                    let data = response.data;
+                    let state = data.state;
+                    if (state == true) {
+                        let username = data.username;
+                        let token = data.token;
+                        VueCookies.set('username', username, "1d");
+                        VueCookies.set("token", token, "1d");
+                        VueCookies.set("email", email, "1d");
+                        $this.isLogin = true;
+                        router.push("/");
+                    }
+                    else{
+                        alert(data.message);
+                    }
+                });
+                this.user_login_visible = false;
+
             },
             confirmRegister(){
                 this.form.validateFields((err, values) => {
-                    if (this.captcha == '' || values.captcha !== this.captcha) {
+                    if (this.captcha == '' || values.captcha != this.captcha) {
                         this.$error({
                             title: '错误',
                             content: '请输入正确的验证码！',
                         });
                         return;
                     }
-                    if (values.email !== '' || values.password == '' || values.password !== values.confirm) {
+                    if (values.email == '' || values.password == '' || values.password != values.confirm) {
                         this.$error({
                             title: '错误',
                             content: '请输入邮箱和密码！',
                         })
                     }
                     else {
-                        this.user_register_visible = false;
-                        this.user_login_visible = false;
-                        this.isLogin = true;
-                        VueCookies.set('name', values.company, "1d");
-                        router.push("/trainTask");
+                        let $this = this;
+                        let param = new URLSearchParams();
+                        let username = values.username;
+                        let email = values.email;
+                        param.append('email', values.email);
+                        param.append('password', values.password);
+                        param.append('username', values.username);
+                        this.$api.User.Register(param).then(function (response) {
+                            let data = response.data;
+                            let state = data.state;
+                            if (state == true) {
+                                let token = data.token;
+                                VueCookies.set('username' , username, "1d");
+                                VueCookies.set("token", token, "1d");
+                                VueCookies.set("email", email, "1d");
+                                $this.isLogin = true;
+                                $this.user_register_visible = false;
+                                $this.user_login_visible = false;
+                                router.push("/");
+                            }
+                            else{
+                                alert(data.message);
+                            }
+                        });
                     }
                 });
             },
@@ -330,25 +256,41 @@
             //暂时支持
             confirmModify(){
                 this.form.validateFields((err, values) => {
-                    if (this.captcha == '' || values.captcha !== this.captcha) {
+                    if (this.captcha == '' || values.captcha != this.captcha) {
                         this.$error({
                             title: '错误',
                             content: '请输入正确的验证码！',
                         });
                         return;
                     }
-                    if (values.email == '' || values.password == '' || values.password !== values.confirm) {
+                    if (values.email == '' || values.password == '' || values.password != values.confirm) {
                         this.$error({
                             title: '错误',
                             content: '请输入邮箱和密码！',
                         })
                     }
                     else {
-                        this.user_modifyPwd_visible = false;
-                        this.password = values.password;
-                        this.$success({
-                            title: '成功',
-                            content: '修改密码成功！',
+                        let $this = this;
+                        let param = new URLSearchParams();
+                        param.append('email', values.email);
+                        param.append('password', values.password);
+                        this.$api.User.Modify(param).then(function (response) {
+                            let data = response.data;
+                            let state = data.state;
+                            if (state == true) {
+                                $this.user_modifyPwd_visible = false;
+                                $this.isLogin = false;
+                                VueCookies.remove('email', 'username', 'token');
+                                $this.$success({
+                                    title: '成功',
+                                    content: '修改密码成功！',
+                                });
+                                $this.user_login_visible = true;
+                                router.push("/");
+                            }
+                            else{
+                                alert(data.message);
+                            }
                         });
                     }
                 });
@@ -373,16 +315,51 @@
                 callback();
             },
             getCaptcha(){
-                this.captcha = 'abcd';
-                // 没有后端的情况下以下代码用来测试
-                const h = this.$createElement;
-                this.$info({
-                    title: '验证码',
-                    content: h('div', {}, [
-                        h('p', '验证码为: abcd'),
-                    ]),
-                    onOk() {},
+                let $this = this;
+                this.form.validateFields((err, values) => {
+                    let param = new URLSearchParams();
+                    param.append('email', values.email);
+                    this.$api.User.Captcha(param).then(function (response) {
+                        let data = response.data;
+                        let state = data.state;
+                        if (state == true) {
+                            $this.captcha = data.captcha;
+                        }
+                    });
                 });
+            },
+            quitLogin(){
+                let $this = this;
+                this.$confirm({
+                    content: '您确定要退出当前登录吗？',
+                    onOk() {
+                        VueCookies.remove('email', 'username', 'token');
+                        $this.isLogin = false;
+                        router.push("/");
+                    },
+                    onCancel() {},
+                });
+            },
+            startSearch(value){
+                let $this = this;
+                let token = VueCookies.get('token');
+                let param = new URLSearchParams();
+                param.append('token', token);
+                param.append('ts_code', value);
+                this.$api.Detail.BasicData(param).then(function (response) {
+                    let data = response.data;
+                    if(data.state == true){
+                        $this.$router.push({
+                            path: `/StockDetail/ + ${data.stocks.symbol}`,
+                            query:{
+                                data: data,
+                            }
+                        });
+                    }
+                    else{
+                        alert("未找到该股票！");
+                    }
+                })
             }
         }
     };
