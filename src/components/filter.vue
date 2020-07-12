@@ -56,8 +56,7 @@
                     <div class="stocktables">
                         <a-table :columns="stockColumns" :data-source="stockData" :pagination='true'
                             :scroll="{x:stockColumns.length*130, y:1000}">
-                            <a :href=record.companyLink target="_blank" slot="name"
-                                slot-scope="text, record">{{record.name}}({{record.symbol}})</a>
+                            <span  slot="name" slot-scope="text, record">{{record.name}}({{record.symbol}})</span>
                         </a-table>
                     </div>
                 </a-layout-content>
@@ -90,8 +89,7 @@
                     </div>
                     <div class="ranktables">
                         <a-table :columns="columns" :data-source="data" :pagination='false'>
-                            <a :href=record.companyLink target="_blank" slot="name"
-                                slot-scope="text, record">{{record.name}}({{record.symbol}})</a>
+                            <span  slot="name" slot-scope="text, record">{{record.name}}({{record.symbol}})</span>
                         </a-table>
                     </div>
                 </a-layout-sider>
