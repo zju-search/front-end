@@ -29,7 +29,8 @@
             >
                 <div class="font"><b>市场一览</b></div>
                 <div :style="{color: '#4682B4'}"><b>沪深300</b></div>
-                <div :style="{fontSize: 'xx-large'}"><b>￥{{parseFloat(indices[indices.length - 1].price).toFixed(2)}}</b></div>
+                <div :style="{fontSize: 'xx-large'}" v-if="this.indices != null"><b>￥{{parseFloat(indices[indices.length - 1].price).toFixed(2)}}</b></div>
+                <div v-else><a-empty></a-empty></div>
                 <div id="container" :style="{marginTop: '20px'}"></div>
                 <div class="font" :style="{marginTop:'40px'}"><b>股票一览</b></div>
                 <a-table
@@ -89,7 +90,7 @@
             return {
                 data: [],
                 markets: [],
-                indices: [],
+                indices: null,
                 stocks: [],
                 columns,
                 pagination: {pageSize: 149,},
@@ -103,12 +104,12 @@
             this.getStocks();
         },
         updated() {
-            if(this.is_painted ==false) {
+            if(this.is_painted ==false && this.indices != null) {
                 const data = this.indices;
 
                 const chart = new Chart({
                     container: 'container',
-                    // autoFit: true,
+                    autoFit: true,
                     width: 550,
                     height: 300,
                 });

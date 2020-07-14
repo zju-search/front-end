@@ -29,6 +29,10 @@
                     <a-icon type="build" />
                     业绩预告
                 </a-menu-item>
+                <a-menu-item key="7">
+                    <a-icon type="dot-chart" />
+                    <span><a  href="http://10.181.140.135:7474/browser/">知识图谱</a></span>
+                </a-menu-item>
             </a-menu>
             <div :style="{padding: '10px', borderTop: 'thin solid #d3d3d3'}">
                 <span slot="title"><a-icon type="highlight" /><span :style="{fontSize: 'medium'}">龙虎榜</span></span>
@@ -49,7 +53,7 @@
             <div class="font" v-if="flag" :style="{float: 'left', marginRight: '10px', color: 'red'}">￥{{stock_details.current_price}}</div>
             <div class="font" v-else :style="{float: 'left', marginRight: '10px', color: 'green'}">￥{{stock_details.current_price}}</div>
             <div v-if=flag :style="{verticalAlign: 'bottom', marginTop: '20px', color:'red'}">+{{parseFloat(stock_details.change).toFixed(2)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
-            <div v-else :style="{verticalAlign: 'bottom', marginTop: '20px', color:'green'}">+{{parseFloat(stock_details.change).toFixed(2)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
+            <div v-else :style="{verticalAlign: 'bottom', marginTop: '20px', color:'green'}">{{parseFloat(stock_details.change).toFixed(2)}} {{parseFloat(stock_details.pct_chg).toFixed(3)}}%</div>
             <a-descriptions :column=4>
                 <a-descriptions-item label="最高">
                     {{stock_details.high}}
@@ -180,12 +184,17 @@
                 if(this.chart != null) {
                     this.chart.destroy();
                 }
+                // if(this.realtime_chart != null){
+                //     this.realtime_chart.destroy();
+                // }
                 if(this.data_today != null) {
                     this.drawRealtimePicture();
                 }
             }
             else{
-                this.realtime_chart.destroy();
+                if(this.realtime_chart!=null) {
+                    this.realtime_chart.destroy();
+                }
                 this.drawKPicture();
             }
         },
@@ -433,8 +442,8 @@
                         range: [0, 1],
                     },
                     price: {
-                        min: $this.min-5,
-                        max: $this.max+5,
+                        min: $this.min,
+                        max: $this.max,
                         nice: true,
                     },
                 });
