@@ -16,7 +16,7 @@
     "@antv/l7-district": "^2.2.11",
     "@antv/l7-maps": "^2.2.11",
     "ant-design-vue": "^1.6.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "moment": "^2.27.0",
     "npm": "^6.14.5",
